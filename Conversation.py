@@ -9,5 +9,5 @@ user_colour = input("What's your favourite colour? ")
 if user_colour.lower() == "blue":
     print("Hey, my favourite is blue too!")
 else:
-    print(user_colour + "'s a pretty colour! But my favourite it blue")
-print("Goodbye! 👋")
+    print(user_colour.lower().capitalize() + "'s a pretty colour! But my favourite it blue")
+print("Goodbye!")
