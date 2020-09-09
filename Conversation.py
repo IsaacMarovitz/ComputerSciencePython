@@ -9,7 +9,7 @@ user_colour = input("What's your favourite colour? ")
 if user_colour.lower() == "blue":
     print("Hey, my favourite is blue too!")
 else:
-    print(user_colour.lower().capitalize() + "'s a pretty colour! But my favourite it blue")
+    print(user_colour.lower().capitalize() + "'s a pretty colour! But my favourite is blue")
 print("Goodbye!")
 input("Press ENTER to exit")
 
