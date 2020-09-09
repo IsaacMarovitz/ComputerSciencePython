@@ -12,3 +12,6 @@ else:
     print(user_colour.lower().capitalize() + "'s a pretty colour! But my favourite it blue")
 print("Goodbye!")
 input("Press ENTER to exit")
+
+# On my honor, I have neither given nor received unauthorized aid
+# Isaac Marovitz
