@@ -11,3 +11,4 @@ if user_colour.lower() == "blue":
 else:
     print(user_colour.lower().capitalize() + "'s a pretty colour! But my favourite it blue")
 print("Goodbye!")
+input("Press ENTER to exit")
