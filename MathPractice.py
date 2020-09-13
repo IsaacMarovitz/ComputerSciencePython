@@ -29,7 +29,7 @@ print("Incorrect Force: " + str(force))
 force = G * mass1 * mass2 / (radius * radius)
 print("Correct Force: " + str(force))
 
-# You can also use the math operator the square the radius
+# You can also use the math operator to square the radius
 
 force = G * mass1 * mass2 / (radius**2)
 print("Correct Force: " + str(force))
@@ -91,5 +91,5 @@ while receivedXInput == False:
 
 print("Distance From Origin: " + str(math.hypot(xCoord, yCoord)))
 
-# On my honour, I have not given nor received unauthorised aid
+# On my honour, I have neither given nor received unauthorised aid
 # Isaac Marovitz
