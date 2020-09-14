@@ -1,5 +1,49 @@
 # Python Homework 09/14/2020
 
+import sys
+
+try:
+    float(sys.argv[1])
+except IndexError:
+    sys.exit("Error: No system arguments given\nProgram exiting")
+except ValueError:
+    sys.exit("First system argument must be a float\nProgram exiting")
+
+try:
+    float(sys.argv[2])
+except IndexError:
+    sys.exit("Error: Second system argument missing\nProgram exiting")
+except ValueError:
+    sys.exit("Second system argument must be a float\nProgram exiting")
+
+try:
+    float(sys.argv[3])
+except IndexError:
+    sys.exit("Error: Third system argument missing\nProgram exiting")
+except ValueError:
+    sys.exit("Third system argument must be a float\nProgram exiting")
+
+try:
+    int(sys.argv[4])
+except IndexError:
+    sys.exit("Error: Third system argument missing\nProgram exiting")
+except ValueError:
+    sys.exit("Fourth system argument must be an int\nProgram exiting")
+
+try:
+    int(sys.argv[5])
+except IndexError:
+    sys.exit("Error: Third system argument missing\nProgram exiting")
+except ValueError:
+    sys.exit("Fifth system argument must be an int\nProgram exiting")
+
+try:
+    int(sys.argv[6])
+except IndexError:
+    sys.exit("Error: Third system argument missing\nProgram exiting")
+except ValueError:
+    sys.exit("Sixth system argument must be an int\nProgram exiting")
+
 #  ----------
 # |Question 1|
 #  ----------
@@ -40,10 +84,13 @@ while receivedTInput == False:
             GetTFInput()
         else:
             GetTCInput()
-        if abs(t) < 50:
+        if t < 50:
             receivedTInput = True
         else:
-            print("The temperature must be above -50 or below 50")
+            if inFahrenheit:
+                print("The temperature must be below 50°F")
+            else:
+                print("The temperature must be below 10°C")
     except ValueError:
         print("Input only numbers")
 
@@ -65,4 +112,32 @@ while receivedVInput == False:
         print("Input only numbers")
 
 w = 35.74 + 0.6215 * t + (0.4275 * t - 35.75) * (v**0.16)
-print(f"The wind chill is {round(w, 1)}")
+if inFahrenheit:
+    print(f"The wind chill is {round(w, 1)}°F")
+else:
+    w = (w-32) * (5/9)
+    print(f"The wind chill is {round(w, 1)}°C")
+
+#  ----------
+# |Question 2|
+#  ----------
+
+x = float(sys.argv[1])
+y = float(sys.argv[2])
+z = float(sys.argv[3])
+
+if (x < y) and (y < z):
+    print("Floats are in order")
+elif (x > y) and (y > z):
+    print("Floats are in order")
+else:
+    print("Floats are not in order")
+
+#  ----------
+# |Question 3|
+#  ----------
+
+
+
+# On my honour, I have neither given nor received unauthorised aid
+# Isaac Marovitz
