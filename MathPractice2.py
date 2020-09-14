@@ -1,6 +1,7 @@
 # Python Homework 09/14/2020
 
 import sys
+import datetime
 
 try:
     float(sys.argv[1])
@@ -137,7 +138,38 @@ else:
 # |Question 3|
 #  ----------
 
+m = int(sys.argv[4])
+d = int(sys.argv[5])
+y = int(sys.argv[6])
 
+# Switch statement alternative from: https://jaxenter.com/implement-switch-case-statement-python-138315.html
+def getDay(argument):
+    switcher = {
+        0 : "Monday",
+        1 : "Tuesday",
+        2 : "Wednesday",
+        3 : "Thursday",
+        4 : "Friday",
+        5 : "Saturday",
+        6 : "Sunday",
+    }
+    print (switcher.get(argument, "Invalid day"))
+
+# y0 = y - (14 - m) / 12
+# x = y0 + y0 / 4 - y0 / 100 + y0 / 400
+# m0 = m + 12 * ((14 - m) / 12) - 2
+# d0 = (d + x + (31 * m0) / 12) % 7
+# getDay(d0)
+
+# I found that these formulas didn't work, even with some debugging it kept
+# outputting incorrect values. I found that Python had its own function to
+# solve this problem so I used that instead, the only difference with this 
+# approach is that Monday is 0 and Sunday is 6.
+
+# datetime solution from: https://stackoverflow.com/questions/9847213/how-do-i-get-the-day-of-week-given-a-date
+
+dayInt = datetime.datetime(y, m, d).weekday()
+getDay(dayInt)
 
 # On my honour, I have neither given nor received unauthorised aid
 # Isaac Marovitz
