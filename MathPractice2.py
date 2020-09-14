@@ -3,6 +3,8 @@
 import sys
 import datetime
 
+# Error handeling for sys.argv
+
 try:
     float(sys.argv[1])
 except IndexError:
@@ -170,6 +172,8 @@ def getDay(argument):
 
 dayInt = datetime.datetime(y, m, d).weekday()
 getDay(dayInt)
+
+input("Press ENTER to exit")
 
 # On my honour, I have neither given nor received unauthorised aid
 # Isaac Marovitz
