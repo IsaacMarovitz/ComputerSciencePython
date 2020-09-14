@@ -107,7 +107,7 @@ def GetVInput():
 while receivedVInput == False:
     try:
         GetVInput()
-        if (v > 120 or v < 3):
+        if (v >= 120 or v <= 3):
             print("The wind speed must be below 120 or above 3")
         else:
             receivedVInput = True
