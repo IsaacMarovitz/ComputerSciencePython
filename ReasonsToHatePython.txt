@@ -11,3 +11,4 @@
 11. Python doesn't even HAVE the option to implicitly restrcit the type of a variable meaning you have to error check EVERYTHING
 12. Python 2 and Python 3 use completely different syntax
 13. Python relies entirely on intentation to check if code is a part of a block
+14. Becuase there are no implict types you can't define a return type for functions
