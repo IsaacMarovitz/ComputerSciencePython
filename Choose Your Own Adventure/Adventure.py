@@ -7,7 +7,6 @@
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 
 import sys, json, os, time, threading
-from PIL import Image
 
 # Variables
 
@@ -130,7 +129,7 @@ def helpCmd(inputMessage):
     if inputMessage == "go":
         typewriter("go ___ = This command will move you to the connecting room you pass into it.\n")
     elif inputMessage == "look":
-        typewriter("look ___ = This command will give you more information about interactables in the current room.\n")
+        typewriter("look ___ = This command will give you more information about interactables in the current room. Type 'look around' to get a summary of interactable objects in the current room.\n")
     elif inputMessage == "help":
         typewriter("help ___ = This command will give you more information about a given command, or will tell you about all available commands.\n")
     elif inputMessage == "inventory":
@@ -237,7 +236,7 @@ print(r"""             _____       _   _                               _        
 
 print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
-#typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
+typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
 time.sleep(0.5)
 clear()
 
@@ -246,6 +245,8 @@ playerName = getTextUserInput("What's your name?: ", "Please only input strings.
 inputReceivedEvent.wait()
 typewriter(f"Nice to meet you {playerName}.\n")
 typewriter("Let's go on an adventure!\n")
+typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command")
+typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'")
 waitForEnter()
 inputReceivedEvent.wait()
 clear()
