@@ -188,20 +188,23 @@ def getCommand():
     inputReceivedEvent.wait()
     parseUserInput(command)
 
+def printHeader(text):
+    print("┌", end='')
+    for _ in text:
+        print("─",end='')
+    print("──┐\r")
+    print(f"│ {text} │")
+    print("└", end='')
+    for _ in text:
+        print("─",end='')
+    print("──┘\n")
+
 def displayRoom():
     global currentRoomIndex
     global quick
     try:
         roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
-        print("┌", end='')
-        for _ in roomName:
-            print("─",end='')
-        print("──┐\r")
-        print(f"│ {roomName} │")
-        print("└", end='')
-        for _ in roomName:
-            print("─",end='')
-        print("──┘\n")
+        printHeader(roomName)
         if not quick:
             typewriter(f"{str(storyData['rooms'][currentRoomIndex]['roomDescription'])}\n")
         else:
@@ -237,7 +240,8 @@ print("                        ------------------------ Quarantine Edition -----
 #typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
 time.sleep(0.5)
 clear()
-print("┌───────┐\n│ Setup │\n└───────┘\n")
+
+printHeader("Setup")
 playerName = getTextUserInput("What's your name?: ", "Please only input strings.\n")
 inputReceivedEvent.wait()
 typewriter(f"Nice to meet you {playerName}.\n")
@@ -245,6 +249,8 @@ typewriter("Let's go on an adventure!\n")
 waitForEnter()
 inputReceivedEvent.wait()
 clear()
+
+printHeader("Exposition")
 typewriter("The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.\n")
 waitForEnter()
 inputReceivedEvent.wait()
