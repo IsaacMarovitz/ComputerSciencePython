@@ -253,7 +253,11 @@ inputReceivedEvent.wait()
 clear()
 
 printHeader("Exposition")
-typewriter("The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.\n")
+typewriter(f"{str(storyData['exposition'])}\n")
+try:
+    typewriter("The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.\n")
+except KeyError:
+    print("Error: story.json is missing or corrupted!")
 waitForEnter()
 inputReceivedEvent.wait()
 clear()

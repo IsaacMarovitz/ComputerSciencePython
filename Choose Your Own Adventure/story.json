@@ -1,4 +1,7 @@
 {
+    "aWordOfWarning": "This is the story.json file. If you mess with it Adventure.py will not be able to run correctly.",
+    "formatingRules": "All room and interactable names must be in Title Case. Every scentence must finish with a full stop.",
+    "exposition": "The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.",
     "rooms": [
         {
             "roomName": "Bedroom",
@@ -35,7 +38,7 @@
                     "interactableUseableDisabled": true,
                     "interactableUseText0": "The lights are off, turn them on?: ",
                     "interactableUseText1": "The lights are on, turn them off?: ",
-                    "interactableDisabled": "The lights aren't working right now."
+                    "interactableDisabled": "The light switch isn't working right now."
                 }
             ],
             "roomConnections": [
@@ -44,8 +47,8 @@
         },
         {
             "roomName": "Bathroom1",
-            "roomDescription": "It's a bathroom. This room connects to 'Hallway1'",
-            "roomLookAround": "There's nothing really in here",
+            "roomDescription": "It's a bathroom. This room connects to 'Hallway1'.",
+            "roomLookAround": "There's nothing really in here.",
             "roomInteractables": [],
             "roomConnections": [
                 "Hallway1"
