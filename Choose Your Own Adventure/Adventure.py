@@ -7,12 +7,14 @@
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 
 import sys, json, os, time, threading
+from PIL import Image
 
 # Variables
 
 charWrapLimit = 150
 currentRoomIndex = 0
 playerName = ""
+quick = False
 
 # Input wait solution taken from Source 3
 inputReceivedEvent = threading.Event()
@@ -29,6 +31,7 @@ def clear():
 # Solution taken from Source 2
 def typewriter(message):
     charCount = 0
+    sleepTime = 0.5
     for char in message:
         sys.stdout.write(char)
         sys.stdout.flush()
@@ -40,7 +43,7 @@ def typewriter(message):
             print("\r")
             charCount = 0
         if char == "." or char == "!":
-            time.sleep(0.5)
+            time.sleep(sleepTime)
 
 def getTextUserInput(inputMessage, failureMessage):
     userInputReceived = False
@@ -57,6 +60,11 @@ def getTextUserInput(inputMessage, failureMessage):
     inputReceivedEvent.set()
     return userInput
 
+def waitForEnter():
+    typewriter("Press any ENTER to continue.")
+    input("")
+    inputReceivedEvent.set()
+
 try:
     with open('story.json', 'r') as storyFile:
         storyData = storyFile.read()
@@ -67,33 +75,55 @@ storyData = json.loads(storyData)
 
 def go(inputMessage):
     global currentRoomIndex
+    global quick
     inputMessage = inputMessage.title()
     if inputMessage in storyData['rooms'][currentRoomIndex]['roomConnections']:
         for room in storyData['rooms']:
             if room['roomName'] == inputMessage:
                 currentRoomIndex = storyData['rooms'].index(room)
                 typewriter(f"You move into {inputMessage}.\n")
+                quick = False
+                waitForEnter()
+                inputReceivedEvent.wait()
                 getCommand()
                 return True
     else:
         typewriter(f"There's no connecting room called {inputMessage}.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
         getCommand()
         return False
 
 def look(inputMessage):
     global currentRoomIndex
-    inputMessage = inputMessage.title()
-    for interactable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
-        if interactable['interactableName'] == inputMessage:
-            typewriter(interactable['interactableText'] + "\n")
-            getCommand()
-            return True
-    typewriter(f"No interactables called {inputMessage}.\n")
-    getCommand()
-    return False
+    if inputMessage == "around":
+        try:
+            typewriter(f"You look around. {storyData['rooms'][currentRoomIndex]['roomLookAround']}\n")
+        except KeyError:
+            typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
+        return True
+    else:
+        inputMessage = inputMessage.title()
+        for interactable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
+            if interactable['interactableName'] == inputMessage:
+                typewriter(interactable['interactableText'] + "\n")
+                waitForEnter()
+                inputReceivedEvent.wait()
+                getCommand()
+                return True
+        typewriter(f"No interactables called {inputMessage}.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
+        return False
 
 def cry():
     typewriter("Lmao you cry I guess. Quarantine sux.\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
     getCommand()
 
 def helpCmd(inputMessage):
@@ -107,6 +137,8 @@ def helpCmd(inputMessage):
         typewriter("inventory = This command will print the current items in your inventory.\n")
     else:
         typewriter('''Avilable Commands:\n    go\n    look\n    inventory\n    help\nType help followed by each command to learn more information about them.\n''')
+    waitForEnter()
+    inputReceivedEvent.wait()
     getCommand()
 
 def inventory(inputMessage):
@@ -121,12 +153,16 @@ def parseUserInput(inputMessage):
             go(inputMessage.replace('go', '').strip())
         except IndexError:
             typewriter("No room given.\n")
+            waitForEnter()
+            inputReceivedEvent.wait()
             getCommand()
     elif textArray[0] == "look":
         try:
             look(inputMessage.replace('look', '').strip())
         except IndexError:
             typewriter("No object to looks at given.\n")
+            waitForEnter()
+            inputReceivedEvent.wait()
             getCommand()
     elif textArray[0] == "help":
         try:
@@ -139,15 +175,51 @@ def parseUserInput(inputMessage):
         cry()
     else:
         typewriter("Command not recognised.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
         getCommand()
 
 def getCommand():
+    global quick
+    clear()
+    displayRoom()
+    quick = True
     command = getTextUserInput("What do you want to do?: ", "Please only input strings.\n")
     inputReceivedEvent.wait()
     parseUserInput(command)
 
-# Program
+def displayRoom():
+    global currentRoomIndex
+    global quick
+    try:
+        roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
+        print("┌", end='')
+        for _ in roomName:
+            print("─",end='')
+        print("──┐\r")
+        print(f"│ {roomName} │")
+        print("└", end='')
+        for _ in roomName:
+            print("─",end='')
+        print("──┘\n")
+        if not quick:
+            typewriter(f"{str(storyData['rooms'][currentRoomIndex]['roomDescription'])}\n")
+        else:
+            print(f"{str(storyData['rooms'][currentRoomIndex]['roomDescription'])}\n")
+    except KeyError:
+        if not quick:
+            typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
+        else:
+            print("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
+    
 
+# TO DO:
+# ADD TAKE COMMAND
+# ADD ASCII ART
+# ADD UI
+# IMPLEMENT INVENTORY
+
+# Program
 clear()
 print("Welcome to:")
 
@@ -162,18 +234,23 @@ print(r"""             _____       _   _                               _        
 
 print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
-typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
+#typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
 time.sleep(0.5)
-#clear()
-
+clear()
+print("┌───────┐\n│ Setup │\n└───────┘\n")
 playerName = getTextUserInput("What's your name?: ", "Please only input strings.\n")
 inputReceivedEvent.wait()
 typewriter(f"Nice to meet you {playerName}.\n")
-typewriter("Let's go on an adventure!")
+typewriter("Let's go on an adventure!\n")
+waitForEnter()
+inputReceivedEvent.wait()
 clear()
 typewriter("The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.\n")
-
-#clear()
+waitForEnter()
+inputReceivedEvent.wait()
+clear()
+displayRoom()
+quick = True
 getCommand()
 
 # On my honour, I have neither given nor receieved unauthorised aid

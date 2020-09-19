@@ -2,7 +2,8 @@
     "rooms": [
         {
             "roomName": "Bedroom",
-            "roomArt": "",
+            "roomDescription": "This is your bedroom. Your computer and your phone are on your desk. It's cold in here. Someone's left the window open. This room connects to 'Hallway1'.",
+            "roomLookAround": "Your computer and your phone are on your desk.",
             "roomInteractables": [
                 {
                     "interactableName": "Computer",
