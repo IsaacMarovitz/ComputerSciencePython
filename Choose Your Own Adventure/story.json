@@ -1,0 +1,52 @@
+{
+    "rooms": [
+        {
+            "roomName": "Bedroom",
+            "roomArt": "",
+            "roomInteractables": [
+                {
+                    "interactableName": "Computer",
+                    "interactableText": "It's your computer. You can see an IDE open with an overcomplicated Python script on screen. You shudder at its ridiculousness.",
+                    "interactableCollectable": false,
+                    "interactableUseable": false
+                },
+                {
+                    "interactableName": "Phone",
+                    "interactableText": "It's your phone. It has a flashlight, which might be useful. Maybe you should bring it.",
+                    "interactableCollectable": true,
+                    "interactableUseable": false
+                }
+            ],
+            "roomConnections": [
+                "Hallway1"
+            ]
+        },
+        {
+            "roomName": "Hallway1",
+            "roomArt": "",
+            "roomInteractables": [
+                {
+                    "interactableName": "Light Switch",
+                    "interactableText": "It's a light switch. Not much else to it.",
+                    "interactableCollectable": false,
+                    "interactableUseable": true,
+                    "interactableUseableDisabled": true,
+                    "interactableUseText0": "The lights are off, turn them on?: ",
+                    "interactableUseText1": "The lights are on, turn them off?: ",
+                    "interactableDisabled": "The lights aren't working right now."
+                }
+            ],
+            "roomConnections": [
+                "Bedroom", "Bathroom1"
+            ]
+        },
+        {
+            "roomName": "Bathroom1",
+            "roomArt":"",
+            "roomInteractables": [],
+            "roomConnections": [
+                "Hallway1"
+            ]
+        }
+    ]
+}
