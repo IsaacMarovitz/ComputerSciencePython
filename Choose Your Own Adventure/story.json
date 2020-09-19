@@ -24,7 +24,8 @@
         },
         {
             "roomName": "Hallway1",
-            "roomArt": "",
+            "roomDescription": "It's a hallway. It's even colder in here. The lights are off. This room connects to 'Bedroom' and 'Bathroom1'.",
+            "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
                     "interactableName": "Light Switch",
@@ -43,7 +44,8 @@
         },
         {
             "roomName": "Bathroom1",
-            "roomArt":"",
+            "roomDescription": "It's a bathroom. This room connects to 'Hallway1'",
+            "roomLookAround": "There's nothing really in here",
             "roomInteractables": [],
             "roomConnections": [
                 "Hallway1"
