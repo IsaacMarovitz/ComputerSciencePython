@@ -60,7 +60,7 @@ def getTextUserInput(inputMessage, failureMessage):
     return userInput
 
 def waitForEnter():
-    typewriter("Press any ENTER to continue.")
+    typewriter("Press ENTER to continue.")
     input("")
     inputReceivedEvent.set()
 
@@ -245,8 +245,8 @@ playerName = getTextUserInput("What's your name?: ", "Please only input strings.
 inputReceivedEvent.wait()
 typewriter(f"Nice to meet you {playerName}.\n")
 typewriter("Let's go on an adventure!\n")
-typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command")
-typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'")
+typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command.\n")
+typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
 waitForEnter()
 inputReceivedEvent.wait()
 clear()
