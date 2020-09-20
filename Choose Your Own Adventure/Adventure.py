@@ -5,6 +5,7 @@
 # 1. https://www.geeksforgeeks.org/clear-screen-python/
 # 2. https://www.youtube.com/watch?time_continue=184&v=2h8e0tXHfk0&feature=emb_logo&ab_channel=LearnLearnScratchTutorials
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
+# 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 
 import sys, json, os, time, threading, re
 
@@ -46,7 +47,7 @@ def typewriter(message):
         if charCount > charWrapLimit and char == " ":
             print("\r")
             charCount = 0
-        if char == "." or char == "!" or char == "?":
+        if char == "." or char == "!":
             time.sleep(sleepTime)
 
 def getTextUserInput(inputMessage, failureMessage):
@@ -268,6 +269,8 @@ def displayRoom():
     try:
         roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
         roomDescription = str(storyData['rooms'][currentRoomIndex]['roomDescription']) + "\n"
+        # Solution taken from Source 4
+        # This finds any instance of {} I put in my roomDescription text, and replaces it with some regex magic.
         placeHolders = re.findall(r"{(\w+)}", roomDescription)
         for index in placeHolders:
             if bool(storyData['rooms'][currentRoomIndex]['roomInteractables'][int(index)]['interactableUseableState']):
@@ -297,14 +300,14 @@ clear()
 if not skipIntro:
     print("Welcome to:")
 
-    print(r"""             _____       _   _                               _                 _                  
+    print(r"""                 _____       _   _                               _                 _                  
                 |  __ \     | | | |                     /\      | |               | |                 
                 | |__) |   _| |_| |__   ___  _ __      /  \   __| |_   _____ _ __ | |_ _   _ _ __ ___ 
                 |  ___/ | | | __| '_ \ / _ \| '_ \    / /\ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \
                 | |   | |_| | |_| | | | (_) | | | |  / ____ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/
                 |_|    \__, |\__|_| |_|\___/|_| |_| /_/    \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|
                         __/ |                                                                         
-                    |___,/                                                                          """)
+                       |___/                                                                          """)
 
     print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
