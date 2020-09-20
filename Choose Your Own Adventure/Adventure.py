@@ -6,14 +6,19 @@
 # 2. https://www.youtube.com/watch?time_continue=184&v=2h8e0tXHfk0&feature=emb_logo&ab_channel=LearnLearnScratchTutorials
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 
-import sys, json, os, time, threading
+import sys, json, os, time, threading, re
 
 # Variables
 
-charWrapLimit = 150
+charWrapLimit = 100
 currentRoomIndex = 0
 playerName = ""
 quick = False
+
+try:
+    skipIntro = bool(sys.argv[1])
+except:
+    skipIntro = False
 
 # Input wait solution taken from Source 3
 inputReceivedEvent = threading.Event()
@@ -41,7 +46,7 @@ def typewriter(message):
         if charCount > charWrapLimit and char == " ":
             print("\r")
             charCount = 0
-        if char == "." or char == "!":
+        if char == "." or char == "!" or char == "?":
             time.sleep(sleepTime)
 
 def getTextUserInput(inputMessage, failureMessage):
@@ -52,6 +57,29 @@ def getTextUserInput(inputMessage, failureMessage):
             typewriter(inputMessage)
             userInput = str(input())
             userInputReceived = True
+        except ValueError:
+            typewriter(failureMessage)
+            userInputReceived = False
+
+    inputReceivedEvent.set()
+    return userInput
+
+def getBooleanUserInput(inputMessage, failureMessage):
+    userInputReceived = False
+    textInput = ""
+    userInput = False
+    while not userInputReceived:
+        try:
+            typewriter(inputMessage)
+            textInput = str(input())
+            userInputReceived = True
+            if textInput.lower().strip() == "yes" or textInput.lower().strip() == "y":
+                userInput = True
+            elif textInput.lower().strip() == "no" or textInput.lower().strip() == "n":
+                userInput = False
+            else:
+                typewriter(failureMessage)
+                userInputReceived = False
         except ValueError:
             typewriter(failureMessage)
             userInputReceived = False
@@ -119,6 +147,32 @@ def look(inputMessage):
         getCommand()
         return False
 
+def use(inputMessage):
+    global currentRoomIndex
+    inputMessage = inputMessage.title()
+    for useable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
+        if useable['interactableName'] == inputMessage and useable['interactableUseable']:
+            if not useable['interactableUseableDisabled']:
+                if useable['interactableUseableState']:
+                    userBool = getBooleanUserInput(str(useable['interactableUseText1']), "Please only input y/n.\n")
+                    inputReceivedEvent.wait()
+                    if userBool:
+                        useable['interactableUseableState'] = False
+                        typewriter(f"{useable['interactableName']} was set to false.\n")
+                else:
+                    userBool = getBooleanUserInput(str(useable['interactableUseText0']), "Please only input y/n.\n")
+                    inputReceivedEvent.wait()
+                    if userBool:
+                        useable['interactableUseableState'] = True
+                        typewriter(f"{useable['interactableName']} was set to true.\n")
+            else:
+                typewriter(f"{useable['interactableDisabled']}\n")
+        else:
+            typewriter(f"No usable objects called {inputMessage}.\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
+    getCommand()
+
 def cry():
     typewriter("Lmao you cry I guess. Quarantine sux.\n")
     waitForEnter()
@@ -129,13 +183,15 @@ def helpCmd(inputMessage):
     if inputMessage == "go":
         typewriter("go ___ = This command will move you to the connecting room you pass into it.\n")
     elif inputMessage == "look":
-        typewriter("look ___ = This command will give you more information about interactables in the current room. Type 'look around' to get a summary of interactable objects in the current room.\n")
-    elif inputMessage == "help":
-        typewriter("help ___ = This command will give you more information about a given command, or will tell you about all available commands.\n")
+        typewriter("look ___ = This command will give you more information about interactable objects in the current room. Type 'look around' to get a summary of interactable objects in the current room.\n")
+    elif inputMessage == "use":
+        typewriter("use ___ = This command will use the object you pass in.\n")
     elif inputMessage == "inventory":
         typewriter("inventory = This command will print the current items in your inventory.\n")
+    elif inputMessage == "help":
+        typewriter("help ___ = This command will give you more information about a given command, or will tell you about all available commands.\n")
     else:
-        typewriter('''Avilable Commands:\n    go\n    look\n    inventory\n    help\nType help followed by each command to learn more information about them.\n''')
+        typewriter('''Avilable Commands:\n    go\n    look\n    use\n    inventory\n    help\nType help followed by each command to learn more information about them.\n''')
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
@@ -160,6 +216,14 @@ def parseUserInput(inputMessage):
             look(inputMessage.replace('look', '').strip())
         except IndexError:
             typewriter("No object to looks at given.\n")
+            waitForEnter()
+            inputReceivedEvent.wait()
+            getCommand()
+    elif textArray[0] == "use":
+        try:
+            use(inputMessage.replace('use', '').strip())
+        except IndexError:
+            typewriter("No object to use given.\n")
             waitForEnter()
             inputReceivedEvent.wait()
             getCommand()
@@ -203,11 +267,18 @@ def displayRoom():
     global quick
     try:
         roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
+        roomDescription = str(storyData['rooms'][currentRoomIndex]['roomDescription']) + "\n"
+        placeHolders = re.findall(r"{(\w+)}", roomDescription)
+        for index in placeHolders:
+            if bool(storyData['rooms'][currentRoomIndex]['roomInteractables'][int(index)]['interactableUseableState']):
+                roomDescription = roomDescription.replace('{'+index+'}', 'on')
+            else:
+                roomDescription = roomDescription.replace('{'+index+'}', 'off')
         printHeader(roomName)
         if not quick:
-            typewriter(f"{str(storyData['rooms'][currentRoomIndex]['roomDescription'])}\n")
+            typewriter(roomDescription)
         else:
-            print(f"{str(storyData['rooms'][currentRoomIndex]['roomDescription'])}\n")
+            print(roomDescription)
     except KeyError:
         if not quick:
             typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
@@ -217,50 +288,49 @@ def displayRoom():
 
 # TO DO:
 # ADD TAKE COMMAND
-# ADD USE COMMAND
 # ADD ASCII ART
 # ADD UI
 # IMPLEMENT INVENTORY
 
 # Program
 clear()
-print("Welcome to:")
+if not skipIntro:
+    print("Welcome to:")
 
-print(r"""             _____       _   _                               _                 _                  
-            |  __ \     | | | |                     /\      | |               | |                 
-            | |__) |   _| |_| |__   ___  _ __      /  \   __| |_   _____ _ __ | |_ _   _ _ __ ___ 
-            |  ___/ | | | __| '_ \ / _ \| '_ \    / /\ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \
-            | |   | |_| | |_| | | | (_) | | | |  / ____ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/
-            |_|    \__, |\__|_| |_|\___/|_| |_| /_/    \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|
-                    __/ |                                                                         
-                   |___,/                                                                          """)
+    print(r"""             _____       _   _                               _                 _                  
+                |  __ \     | | | |                     /\      | |               | |                 
+                | |__) |   _| |_| |__   ___  _ __      /  \   __| |_   _____ _ __ | |_ _   _ _ __ ___ 
+                |  ___/ | | | __| '_ \ / _ \| '_ \    / /\ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \
+                | |   | |_| | |_| | | | (_) | | | |  / ____ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/
+                |_|    \__, |\__|_| |_|\___/|_| |_| /_/    \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|
+                        __/ |                                                                         
+                    |___,/                                                                          """)
 
-print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
+    print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
-typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
-time.sleep(0.5)
-clear()
+    typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
+    time.sleep(0.5)
+    clear()
 
-printHeader("Setup")
-playerName = getTextUserInput("What's your name?: ", "Please only input strings.\n")
-inputReceivedEvent.wait()
-typewriter(f"Nice to meet you {playerName}.\n")
-typewriter("Let's go on an adventure!\n")
-typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command.\n")
-typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
-waitForEnter()
-inputReceivedEvent.wait()
-clear()
+    printHeader("Setup")
+    playerName = getTextUserInput("What's your name?: ", "Please only input strings.\n")
+    inputReceivedEvent.wait()
+    typewriter(f"Nice to meet you {playerName}.\n")
+    typewriter("Let's go on an adventure!\n")
+    typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command.\n")
+    typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
+    clear()
 
-printHeader("Exposition")
-typewriter(f"{str(storyData['exposition'])}\n")
-try:
-    typewriter("The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.\n")
-except KeyError:
-    print("Error: story.json is missing or corrupted!")
-waitForEnter()
-inputReceivedEvent.wait()
-clear()
+    printHeader("Exposition")
+    try:
+        typewriter(f"{str(storyData['exposition'])}\n")
+    except KeyError:
+        print("Error: story.json is missing or corrupted!")
+    waitForEnter()
+    inputReceivedEvent.wait()
+    clear()
 displayRoom()
 quick = True
 getCommand()

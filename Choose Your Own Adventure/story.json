@@ -27,7 +27,7 @@
         },
         {
             "roomName": "Hallway1",
-            "roomDescription": "It's a hallway. It's even colder in here. The lights are off. This room connects to 'Bedroom' and 'Bathroom1'.",
+            "roomDescription": "It's a hallway. It's even colder in here. The lights are {0}. This room connects to 'Bedroom' and 'Bathroom1'.",
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
@@ -35,9 +35,10 @@
                     "interactableText": "It's a light switch. Not much else to it.",
                     "interactableCollectable": false,
                     "interactableUseable": true,
-                    "interactableUseableDisabled": true,
-                    "interactableUseText0": "The lights are off, turn them on?: ",
-                    "interactableUseText1": "The lights are on, turn them off?: ",
+                    "interactableUseableDisabled": false,
+                    "interactableUseableState": false,
+                    "interactableUseText0": "The lights are off, turn them on? (y/n): ",
+                    "interactableUseText1": "The lights are on, turn them off? (y/n): ",
                     "interactableDisabled": "The light switch isn't working right now."
                 }
             ],
