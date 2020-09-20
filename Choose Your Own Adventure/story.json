@@ -5,8 +5,8 @@
     "rooms": [
         {
             "roomName": "Bedroom",
-            "roomDescription": "This is your bedroom. Your computer and your phone are on your desk. It's cold in here. Someone's left the window open. This room connects to 'Hallway1'.",
-            "roomLookAround": "Your computer and your phone are on your desk.",
+            "roomDescription": "This is your bedroom. {1, Your computer is on your desk., Your computer and your phone are on your desk., interactableCollectable} It's cold in here. Someone's left the window open. This room connects to 'Hallway 1'.",
+            "roomLookAround": "{1, Your computer is on your desk., Your computer and your phone are on your desk., interactableCollectable}",
             "roomInteractables": [
                 {
                     "interactableName": "Computer",
@@ -18,16 +18,23 @@
                     "interactableName": "Phone",
                     "interactableText": "It's your phone. It has a flashlight, which might be useful. Maybe you should bring it.",
                     "interactableCollectable": true,
-                    "interactableUseable": false
+                    "interactableInventoryDescription": "It's your phone. It has a flashlight, which might be useful.",
+                    "interactableUseable": true,
+                    "interactableSingleUse": false,
+                    "interactableUseableDisabled": false,
+                    "interactableUseableState": true,
+                    "interactableUseText0": "The phone's flashlight is off, turn it on? (y/n): ",
+                    "interactableUseText1": "The phone's flashlight is on, turn it off? (y/n): ",
+                    "interactableDisabled": "Your phone is out of battery"
                 }
             ],
             "roomConnections": [
-                "Hallway1"
+                "Hallway 1"
             ]
         },
         {
-            "roomName": "Hallway1",
-            "roomDescription": "It's a hallway. It's even colder in here. The lights are {0}. This room connects to 'Bedroom' and 'Bathroom1'.",
+            "roomName": "Hallway 1",
+            "roomDescription": "It's a hallway. It's even colder in here. The lights are {0, off, on, interactableUseableState}. This room connects to 'Bedroom', 'Bathroom 1', and 'Stairs 1'.",
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
@@ -35,6 +42,7 @@
                     "interactableText": "It's a light switch. Not much else to it.",
                     "interactableCollectable": false,
                     "interactableUseable": true,
+                    "interactableSingleUse": false,
                     "interactableUseableDisabled": false,
                     "interactableUseableState": false,
                     "interactableUseText0": "The lights are off, turn them on? (y/n): ",
@@ -43,17 +51,130 @@
                 }
             ],
             "roomConnections": [
-                "Bedroom", "Bathroom1"
+                "Bedroom", "Bathroom 1", "Stairs 1"
             ]
         },
         {
-            "roomName": "Bathroom1",
-            "roomDescription": "It's a bathroom. This room connects to 'Hallway1'.",
+            "roomName": "Bathroom 1",
+            "roomDescription": "It's a bathroom. This room connects to 'Hallway 1'.",
             "roomLookAround": "There's nothing really in here.",
             "roomInteractables": [],
             "roomConnections": [
-                "Hallway1"
+                "Hallway 1"
+            ]
+        },
+        {
+            "roomName": "Stairs 1",
+            "roomDescription": "The stairs lead down to the floor below. You can hear something terrible downstairs. You still can't quite place what it is yet. This room connects to 'Hallway 1' and 'Hallway 2'.",
+            "roomLookAround": "There are old family photos all along the walls. You don't even recognised half of them.",
+            "roomInteractables": [
+                {
+                    "interactableName": "Picture",
+                    "interactableText": "It's an old black and white photo of someone in your family you don't know the name of.",
+                    "interactableCollectable": false,
+                    "interactableUseable": false
+                },
+                {
+                    "interactableName": "Photo",
+                    "interactableText":"It's an old black and white photo of someone in your family you don't know the name of.",
+                    "interactableCollectable": false,
+                    "interactableUseable": false
+                }
+            ],
+            "roomConnections": [
+                "Hallway 1", "Hallway 2"
+            ]
+        },
+        {
+            "roomName": "Hallway 2",
+            "roomDescription": "This is your parents' floor. This hallway is just as dark and cold as the last. The sound from downstairs is lounder now. You can start to discern shrill voices chittering away. This room connects to 'Stairs 1', 'Master Bedroom' and 'Stairs 2'.",
+            "roomLookAround": "The hallway is quite empty apart from a light switch on the wall.",
+            "roomInteractables": [
+                {
+                    "interactableName": "Light Switch",
+                    "interactableText": "It's a light switch. Not much else to it.",
+                    "interactableCollectable": false,
+                    "interactableUseable": true,
+                    "interactableSingleUse": false,
+                    "interactableUseableDisabled": true,
+                    "interactableUseableState": false,
+                    "interactableUseText0": "The lights are off, turn them on? (y/n): ",
+                    "interactableUseText1": "The lights are on, turn them off? (y/n): ",
+                    "interactableDisabled": "The light switch isn't working right now."
+                }
+            ],
+            "roomConnections": [
+                "Stairs 1", "Master Bedroom", "Stairs 2"
+            ]
+        },
+        {
+            "roomName": "Master Bedroom",
+            "roomDescription": "You stand outside your parents' room. You decide that you shouldn't go in and risk waking them up. This room connects to 'Hallway 2'.",
+            "roomLookAround": "You stand outside your parents' room. Their doors stands menacingly. Let's try not to wake them up.",
+            "roomInteractables": [],
+            "roomConnections": [
+                "Hallway 2"
+            ]
+        },
+        {
+            "roomName": "Stairs 2",
+            "roomDescription": "These stairs lead down to the landing bathroom. There might be usefull supplies in there. Thi room connects to 'Landing Bathroom' and 'Hallway 2'.",
+            "roomLookAround": "It's a set of stairs.",
+            "roomInteractables": [],
+            "roomConnections": [
+                "Landing Bathroom", "Hallway 2"
+            ]
+        },
+        {
+            "roomName": "Landing Bathroom",
+            "roomDescription": "It's a bathroom. {lights, You open the cupboards to find useful supplies but you can't see anything because it's too dark., You can see a couple bandages.} This room connects to 'Stairs 2' and 'Stairs 3'.",
+            "roomLookAround": "It's a bathroom, with cupboards full of supplies.",
+            "roomInteractables": [
+                {
+                    "interactableName": "Bandage",
+                    "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
+                    "interactableCollectable": true,
+                    "interactableInventoryDescription": "It's a bandage you can use to health health.",
+                    "interactableUseable": true,
+                    "interactableSingleUse": true,
+                    "interactableUseText": "Use the bandage? (y/n): ",
+                    "interactableUseStat": "health",
+                    "interactableUseStrength": 5
+                },
+                {
+                    "interactableName": "Bandage",
+                    "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
+                    "interactableCollectable": true,
+                    "interactableInventoryDescription": "It's a bandage you can use to health health.",
+                    "interactableUseable": true,
+                    "interactableSingleUse": true,
+                    "interactableUseText": "Use the bandage? (y/n): ",
+                    "interactableUseStat": "health",
+                    "interactableUseStrength": 5
+                }
+            ],
+            "roomConnections": [
+                "Stairs 2", "Stairs 3"
+            ]
+        },
+        {
+            "roomName": "Stairs 3",
+            "roomDescription": "This is the last set of stairs before you reach the noise. You don't know why but you feel as if you should prepare for a fight. The sound is louder now, and you think you can hear American voices chattering the darkness. This room connects to 'Landing Bathroom' and 'The End?'.",
+            "roomLookAround": "There's nothing special on the stairs",
+            "roomInteractables": [],
+            "roomConnections": [
+                "Landing Bathroom", "The End?"
             ]
         }
+    ],
+    "player": [
+        {
+            "name": "",
+            "lights": false,
+            "health": 20
+        }
+    ],
+    "inventory": [
+
     ]
 }
