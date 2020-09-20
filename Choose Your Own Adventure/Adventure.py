@@ -7,7 +7,7 @@
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 
-import sys, json, os, time, threading, re
+import sys, json, os, time, threading, re, PJEX
 
 # Variables
 
@@ -385,13 +385,12 @@ def printHeader(text):
 def displayRoom():
     global currentRoomIndex
     global quick
-    print(storyData['player'][0]['lights'])
     try:
         roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
         roomDescription = str(storyData['rooms'][currentRoomIndex]['roomDescription']) + "\n\n"
         # Solution taken from Source 4
         # This finds any instance of {} I put in my roomDescription text, and turns it into an array of values using regex magic. It took me so long to find a regex value that worked
-        # and I don't know why it does but it's probably fine.
+        # correctly and I don't know why it does but it's probably fine.
         if "{" in roomDescription:
             try:
                 placeHolders = re.findall(r"{(.+), (.+), (.+), (.+)}", roomDescription)
@@ -441,7 +440,8 @@ if not skipIntro:
     print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
     typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
-    time.sleep(0.5)
+    waitForEnter()
+    inputReceivedEvent.wait()
     clear()
 
     printHeader("Setup")
@@ -450,7 +450,7 @@ if not skipIntro:
     typewriter(f"Nice to meet you {storyData['player'][0]['name']}.\n")
     typewriter("Let's go on an adventure!\n")
     typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command.\n")
-    typewriter("Please bare in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
+    typewriter("Please bear in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     clear()

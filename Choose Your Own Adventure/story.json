@@ -166,7 +166,7 @@
         },
         {
             "roomName": "Stairs 3",
-            "roomDescription": "This is the last set of stairs before you reach the noise. You don't know why but you feel as if you should prepare for a fight. The sound is louder now, and you think you can hear American voices chattering the darkness. This room connects to 'Landing Bathroom' and 'The End?'.",
+            "roomDescription": "This is the last set of stairs before you reach the noise. You don't know why but you feel as if you should prepare for a fight. The sound is louder now, and you think you can hear American voices chattering in the darkness. This room connects to 'Landing Bathroom' and 'The End?'.",
             "roomLookAround": "There's nothing special on the stairs",
             "roomInteractables": [],
             "roomConnections": [
