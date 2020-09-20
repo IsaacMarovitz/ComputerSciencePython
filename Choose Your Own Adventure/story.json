@@ -22,9 +22,12 @@
                     "interactableUseable": true,
                     "interactableSingleUse": false,
                     "interactableUseableDisabled": false,
-                    "interactableUseableState": true,
+                    "interactableUseableState": false,
+                    "interactablePlayerValue": "lights",
                     "interactableUseText0": "The phone's flashlight is off, turn it on? (y/n): ",
+                    "interactableSetText0": "The phone's flashlight was turned off.",
                     "interactableUseText1": "The phone's flashlight is on, turn it off? (y/n): ",
+                    "interactableSetText1": "The phone's flashlight was turned on.",
                     "interactableDisabled": "Your phone is out of battery"
                 }
             ],
@@ -46,7 +49,9 @@
                     "interactableUseableDisabled": false,
                     "interactableUseableState": false,
                     "interactableUseText0": "The lights are off, turn them on? (y/n): ",
+                    "interactableSetText0": "The lights were turned off.",
                     "interactableUseText1": "The lights are on, turn them off? (y/n): ",
+                    "interactableSetText1": "The lights were turned on.",
                     "interactableDisabled": "The light switch isn't working right now."
                 }
             ],
@@ -99,7 +104,9 @@
                     "interactableUseableDisabled": true,
                     "interactableUseableState": false,
                     "interactableUseText0": "The lights are off, turn them on? (y/n): ",
+                    "interactableSetText0": "The lights were turned off.",
                     "interactableUseText1": "The lights are on, turn them off? (y/n): ",
+                    "interactableSetText1": "The lights were turned on.",
                     "interactableDisabled": "The light switch isn't working right now."
                 }
             ],
@@ -118,16 +125,16 @@
         },
         {
             "roomName": "Stairs 2",
-            "roomDescription": "These stairs lead down to the landing bathroom. There might be usefull supplies in there. Thi room connects to 'Landing Bathroom' and 'Hallway 2'.",
+            "roomDescription": "These stairs lead down to the landing bathroom. There might be useful supplies in there. This room connects to 'Landing Bathroom', 'Stairs 3' and 'Hallway 2'.",
             "roomLookAround": "It's a set of stairs.",
             "roomInteractables": [],
             "roomConnections": [
-                "Landing Bathroom", "Hallway 2"
+                "Landing Bathroom", "Hallway 2", "Stairs 3"
             ]
         },
         {
             "roomName": "Landing Bathroom",
-            "roomDescription": "It's a bathroom. {lights, You open the cupboards to find useful supplies but you can't see anything because it's too dark., You can see a couple bandages.} This room connects to 'Stairs 2' and 'Stairs 3'.",
+            "roomDescription": "It's a bathroom. {lights, You open the cupboards to find useful supplies but you can't see anything because it's too dark., You can see a couple bandages., f} This room connects to 'Stairs 2'.",
             "roomLookAround": "It's a bathroom, with cupboards full of supplies.",
             "roomInteractables": [
                 {
@@ -154,7 +161,7 @@
                 }
             ],
             "roomConnections": [
-                "Stairs 2", "Stairs 3"
+                "Stairs 2"
             ]
         },
         {

@@ -179,21 +179,29 @@ def useCheck(useable):
             inputReceivedEvent.wait()
             if userBool:
                 useable['interactableUseableState'] = False
-                typewriter(f"{useable['interactableName']} was set to false.\n")
+                try:
+                    storyData['player'][0][useable['interactablePlayerValue']] = useable['interactableUseableState']
+                except KeyError:
+                    pass
+                typewriter(f"{useable['interactableSetText0']}\n")
                 waitForEnter()
                 inputReceivedEvent.wait()
                 getCommand()
                 return True
-            else:
-                userBool = getBooleanUserInput(str(useable['interactableUseText0']), "Please only input y/n.\n")
+        else:
+            userBool = getBooleanUserInput(str(useable['interactableUseText0']), "Please only input y/n.\n")
+            inputReceivedEvent.wait()
+            if userBool:
+                useable['interactableUseableState'] = True
+                try:
+                    storyData['player'][0][useable['interactablePlayerValue']] = useable['interactableUseableState']
+                except KeyError:
+                    pass
+                typewriter(f"{useable['interactableSetText1']}\n")
+                waitForEnter()
                 inputReceivedEvent.wait()
-                if userBool:
-                    useable['interactableUseableState'] = True
-                    typewriter(f"{useable['interactableName']} was set to true.\n")
-                    waitForEnter()
-                    inputReceivedEvent.wait()
-                    getCommand()
-                    return True
+                getCommand()
+                return True
     else:
         typewriter(f"{useable['interactableDisabled']}\n")
         waitForEnter()
@@ -205,22 +213,25 @@ def use(inputMessage):
     global currentRoomIndex
     originalMessage = inputMessage.strip().title()
     inputMessage = inputMessage.lower().replace(" ", "")
+    for useable in storyData['inventory']:
+        if str(useable['interactableName']).lower().replace(" ", "") == inputMessage:
+            if useable['interactableSingleUse'] == True:
+                userBool = getBooleanUserInput(str(useable['interactableUseText']), "Please only input y/n.\n")
+                inputReceivedEvent.wait()
+                if userBool:
+                    storyData['player'][0][useable['interactableUseStat']] + useable['interactableUseStrength']
+                    typewriter(f"Used {originalMessage}. {str(useable['interactableUseStat']).title()} increased by {str(useable['interactableUseStrength'])}.\n")
+                    storyData['inventory'].remove(useable)
+                    return False
+            else:
+                useCheck(useable)
+                return True
     for useable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
         if str(useable['interactableName']).lower().replace(" ", "") == inputMessage and useable['interactableUseable']:
             if not useable['interactableCollectable']:
                 useCheck(useable)
+                return True
             else:
-                for useable in storyData['inventory']:
-                    if str(useable['interactableName']).lower().replace(" ", "") == inputMessage:
-                        if useable['interactableSingleUse'] == True:
-                            userBool = getBooleanUserInput(str(useable['interactableUseText']), "Please only input y/n.\n")
-                            inputReceivedEvent.wait()
-                            if userBool:
-                                storyData['player'][0][useable['interactableUseStat']] + useable['interactableUseStrength']
-                                typewriter(f"Used {originalMessage}. {str(useable['interactableUseStat']).title()} increased by {str(useable['interactableUseStrength'])}.\n")
-                                storyData['inventory'].remove(useable)
-                        else:
-                            useCheck(useable)
                 typewriter(f"Add {originalMessage} to your inventory to use it.\n")
                 waitForEnter()
                 inputReceivedEvent.wait()
@@ -374,6 +385,7 @@ def printHeader(text):
 def displayRoom():
     global currentRoomIndex
     global quick
+    print(storyData['player'][0]['lights'])
     try:
         roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
         roomDescription = str(storyData['rooms'][currentRoomIndex]['roomDescription']) + "\n\n"
@@ -411,11 +423,6 @@ def displayRoom():
             typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
         else:
             print("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
-    
-
-# TO DO:
-# ADD ASCII ART
-# ADD UI
 
 # Program
 clear()
