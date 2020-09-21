@@ -100,23 +100,33 @@ try:
 except FileNotFoundError:
     sys.exit("Error: story.json is missing or corrupted!\nProgram exiting.")
 
-storyData = json.loads(storyData)
+try:
+    storyData = json.loads(storyData)
+except json.decoder.JSONDecodeError:
+    sys.exit("Error: story.json is missing or corrupted!\nProgram exiting.")
 
 def go(inputMessage):
     global currentRoomIndex
     global quick
     originalMessage = inputMessage.strip().title()
     inputMessage = inputMessage.lower().replace(" ", "")
-    if inputMessage in str(storyData['rooms'][currentRoomIndex]['roomConnections']).lower().replace(" ", ""):
-        for room in storyData['rooms']:
-            if str(room['roomName']).lower().replace(" ", "") == inputMessage:
-                currentRoomIndex = storyData['rooms'].index(room)
-                typewriter(f"You move into {originalMessage}.\n")
-                quick = False
-                waitForEnter()
-                inputReceivedEvent.wait()
-                getCommand()
-                return True
+    try:
+        if inputMessage in str(storyData['rooms'][currentRoomIndex]['roomConnections']).lower().replace(" ", ""):
+            for room in storyData['rooms']:
+                if str(room['roomName']).lower().replace(" ", "") == inputMessage:
+                    currentRoomIndex = storyData['rooms'].index(room)
+                    typewriter(f"You move into {originalMessage}.\n")
+                    quick = False
+                    waitForEnter()
+                    inputReceivedEvent.wait()
+                    getCommand()
+                    return True
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
+        return False
     else:
         typewriter(f"There's no connecting room called {originalMessage}.\n")
         waitForEnter()
@@ -129,10 +139,13 @@ def look(inputMessage):
     if inputMessage == "around":
         try:
             currentRoom = storyData['rooms'][currentRoomIndex]
-            roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
+            try:
+                roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
+            except SyntaxError:
+                roomLookAround = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
             typewriter(roomLookAround)
         except KeyError:
-            typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n")
+            typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
@@ -140,13 +153,21 @@ def look(inputMessage):
     else:
         originalMessage = inputMessage.strip().title()
         inputMessage = inputMessage.lower().replace(" ", "")
-        for interactable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
-            if str(interactable['interactableName']).lower().replace(" ", "") == inputMessage:
-                typewriter(interactable['interactableText'] + "\n")
-                waitForEnter()
-                inputReceivedEvent.wait()
-                getCommand()
-                return True
+        try:
+            for interactable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
+                if str(interactable['interactableName']).lower().replace(" ", "") == inputMessage:
+                    typewriter(interactable['interactableText'] + "\n")
+                    waitForEnter()
+                    inputReceivedEvent.wait()
+                    getCommand()
+                    return True
+        except KeyError:
+            typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+            waitForEnter()
+            inputReceivedEvent.wait()
+            getCommand()
+            return False
+
         typewriter(f"No interactables called {originalMessage}.\n")
         waitForEnter()
         inputReceivedEvent.wait()
@@ -194,30 +215,37 @@ def use(inputMessage):
     global currentRoomIndex
     originalMessage = inputMessage.strip().title()
     inputMessage = inputMessage.lower().replace(" ", "")
-    for useable in storyData['inventory']:
-        if str(useable['interactableName']).lower().replace(" ", "") == inputMessage:
-            if useable['interactableSingleUse'] == True:
-                userBool = getBooleanUserInput(str(useable['interactableUseText']), "Please only input y/n.\n")
-                inputReceivedEvent.wait()
-                if userBool:
-                    storyData['player'][0][useable['interactableUseStat']] + useable['interactableUseStrength']
-                    typewriter(f"Used {originalMessage}. {str(useable['interactableUseStat']).title()} increased by {str(useable['interactableUseStrength'])}.\n")
-                    storyData['inventory'].remove(useable)
+    try:
+        for useable in storyData['inventory']:
+            if str(useable['interactableName']).lower().replace(" ", "") == inputMessage:
+                if useable['interactableSingleUse'] == True:
+                    userBool = getBooleanUserInput(str(useable['interactableUseText']), "Please only input y/n.\n")
+                    inputReceivedEvent.wait()
+                    if userBool:
+                        storyData['player'][0][useable['interactableUseStat']] + useable['interactableUseStrength']
+                        typewriter(f"Used {originalMessage}. {str(useable['interactableUseStat']).title()} increased by {str(useable['interactableUseStrength'])}.\n")
+                        storyData['inventory'].remove(useable)
+                        return False
+                else:
+                    useCheck(useable)
+                    return True
+        for useable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
+            if str(useable['interactableName']).lower().replace(" ", "") == inputMessage and useable['interactableUseable']:
+                if not useable['interactableCollectable']:
+                    useCheck(useable)
+                    return True
+                else:
+                    typewriter(f"Add {originalMessage} to your inventory to use it.\n")
+                    waitForEnter()
+                    inputReceivedEvent.wait()
+                    getCommand()
                     return False
-            else:
-                useCheck(useable)
-                return True
-    for useable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
-        if str(useable['interactableName']).lower().replace(" ", "") == inputMessage and useable['interactableUseable']:
-            if not useable['interactableCollectable']:
-                useCheck(useable)
-                return True
-            else:
-                typewriter(f"Add {originalMessage} to your inventory to use it.\n")
-                waitForEnter()
-                inputReceivedEvent.wait()
-                getCommand()
-                return False
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
+        return False
                     
     typewriter(f"No usable objects called {originalMessage}.\n")
     waitForEnter()
@@ -229,15 +257,22 @@ def take(inputMessage):
     global currentRoomIndex
     originalMessage = inputMessage.strip().title()
     inputMessage = inputMessage.lower().replace(" ", "")
-    for collectable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
-        if str(collectable['interactableName']).lower().replace(" ", "") == inputMessage and collectable['interactableCollectable']:
-            storyData['inventory'].append(collectable)
-            storyData['rooms'][currentRoomIndex]['roomInteractables'].remove(collectable)
-            typewriter(f"{originalMessage} was added to your inventory.\n")
-            waitForEnter()
-            inputReceivedEvent.wait()
-            getCommand()
-            return True
+    try:
+        for collectable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
+            if str(collectable['interactableName']).lower().replace(" ", "") == inputMessage and collectable['interactableCollectable']:
+                storyData['inventory'].append(collectable)
+                storyData['rooms'][currentRoomIndex]['roomInteractables'].remove(collectable)
+                typewriter(f"{originalMessage} was added to your inventory.\n")
+                waitForEnter()
+                inputReceivedEvent.wait()
+                getCommand()
+                return True
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
+        return False
 
     typewriter(f"No collectable objects called {originalMessage}.\n")
     waitForEnter()
@@ -246,9 +281,12 @@ def take(inputMessage):
     return False
 
 def stats():
-    typewriter("You stats are as follows.\n")
-    typewriter(f"   Player Name - {storyData['player'][0]['name']}\n")
-    typewriter(f"   HP - {str(storyData['player'][0]['health'])}\n")
+    try:
+        typewriter("You stats are as follows.\n")
+        typewriter(f"   Player Name - {storyData['player'][0]['name']}\n")
+        typewriter(f"   HP - {str(storyData['player'][0]['health'])}\n")
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
@@ -282,17 +320,20 @@ def helpCmd(inputMessage):
 
 def inventory(inputMessage):
     typewriter("You have the following items in your inventory.\n")
-    for collectable in storyData['inventory']:
-        try:
+    try:
+        for collectable in storyData['inventory']:
             typewriter(f"   {collectable['interactableName']} - {collectable['interactableInventoryDescription']}\n")
-        except KeyError:
-            typewriter("Hmmmm. I'm missing some data about this item. Your story.json file may be incomplete.\n")
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
 
 def parseUserInput(inputMessage):
     inputMessage = str(inputMessage).lower()
+    forbiddenWords = ['to', 'at', 'the', 'a', 'an', 'my', 'your', 'some', 'of']
+    for word in forbiddenWords:
+        inputMessage = inputMessage.replace(f' {word} ', ' ')
     textArray = inputMessage.split(" ")
     if textArray[0] == "go":
         try:
@@ -369,7 +410,10 @@ def displayRoom():
     try:
         currentRoom = storyData['rooms'][currentRoomIndex]
         roomName = str(currentRoom['roomName'])
-        roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
+        try:
+            roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
+        except SyntaxError:
+            roomDescription = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
         printHeader(roomName)
         if not quick:
             typewriter(roomDescription)
@@ -397,18 +441,22 @@ if not skipIntro:
 
     print("                        ------------------------ Quarantine Edition ------------------------", end = '\n\n\n')
 
-    typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.")
+    typewriter("It's recommended that you play this game in fullscreen, so that ASCII art is correctly displayed.\n\n")
     waitForEnter()
     inputReceivedEvent.wait()
     clear()
 
     printHeader("Setup")
-    storyData['player'][0]['name'] = getTextUserInput("What's your name?: ", "Please only input strings.\n")
-    inputReceivedEvent.wait()
-    typewriter(f"Nice to meet you {storyData['player'][0]['name']}.\n")
+    try:
+        storyData['player'][0]['name'] = getTextUserInput("What's your name?: ", "Please only input strings.\n")
+        inputReceivedEvent.wait()
+        typewriter(f"Nice to meet you {storyData['player'][0]['name']}.\n")
+    except KeyError:
+        print("Error: story.json is missing or corrupted!")
+
     typewriter("Let's go on an adventure!\n")
     typewriter("If you ever feel stuck or unsure use the 'help' command to get a summary of each usable command.\n")
-    typewriter("Please bear in mind that each command will only work with basic statments like 'look computer' not 'look at the computer'.\n")
+    typewriter("Commands will work with basic statements like 'look at the computer' or 'take my phone'.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     clear()

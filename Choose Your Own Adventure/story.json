@@ -39,7 +39,7 @@
         },
         {
             "roomName": "Hallway 1",
-            "roomDescription": "'''It's a hallway. It's even colder in here. The lights are {}. This room connects to 'Bedroom', 'Bathroom 1', and 'Stairs 1'.'''.format('on' if currentRoom['roomInteractables'][0]['interactableUseableState'] else 'off'",
+            "roomDescription": "'''It's a hallway. It's even colder in here. The lights are {}. This room connects to 'Bedroom', 'Bathroom 1', and 'Stairs 1'.'''.format('on' if currentRoom['roomInteractables'][0]['interactableUseableState'] else 'off')",
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
@@ -187,6 +187,6 @@
         }
     ],
     "inventory": [
-        
+
     ]
 }
