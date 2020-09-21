@@ -8,7 +8,7 @@
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 # 5. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json
 
-import sys, json, os, time, threading, re
+import sys, json, os, time, threading
 
 # Variables
 
@@ -139,10 +139,13 @@ def look(inputMessage):
     if inputMessage == "around":
         try:
             currentRoom = storyData['rooms'][currentRoomIndex]
-            try:
-                roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
-            except SyntaxError:
-                roomLookAround = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
+            if "format" in currentRoom['roomLookAround']:
+                try:
+                    roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
+                except SyntaxError:
+                    roomLookAround = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
+            else:
+                roomLookAround = f"You look around. {currentRoom['roomLookAround']}\n"
             typewriter(roomLookAround)
         except KeyError:
             typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
@@ -331,7 +334,7 @@ def inventory(inputMessage):
 
 def parseUserInput(inputMessage):
     inputMessage = str(inputMessage).lower()
-    forbiddenWords = ['to', 'at', 'the', 'a', 'an', 'my', 'your', 'some', 'of']
+    forbiddenWords = ['to', 'at', 'the', 'a', 'an', 'my', 'your', 'some', 'of', 'into']
     for word in forbiddenWords:
         inputMessage = inputMessage.replace(f' {word} ', ' ')
     textArray = inputMessage.split(" ")
@@ -410,10 +413,13 @@ def displayRoom():
     try:
         currentRoom = storyData['rooms'][currentRoomIndex]
         roomName = str(currentRoom['roomName'])
-        try:
-            roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
-        except SyntaxError:
-            roomDescription = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
+        if "format" in currentRoom['roomDescription']:
+            try:
+                roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
+            except SyntaxError:
+                roomDescription = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
+        else:
+            roomDescription = f"{currentRoom['roomDescription']}\n"
         printHeader(roomName)
         if not quick:
             typewriter(roomDescription)
@@ -424,6 +430,11 @@ def displayRoom():
             typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
         else:
             print("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
+
+# TO DO
+# Recognise more than one word for each item for example 'photo' and 'picture', or 'bandages' and 'bandage'
+# ASCII Art
+# Change out 'waitForEnter' for a wait function It's cumbersome 
 
 # Program
 clear()
