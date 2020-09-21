@@ -6,6 +6,7 @@
 # 2. https://www.youtube.com/watch?time_continue=184&v=2h8e0tXHfk0&feature=emb_logo&ab_channel=LearnLearnScratchTutorials
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
+# 5. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json
 
 import sys, json, os, time, threading, re
 
@@ -127,29 +128,9 @@ def look(inputMessage):
     global currentRoomIndex
     if inputMessage == "around":
         try:
-            roomLookAround = f"You look around. {str(storyData['rooms'][currentRoomIndex]['roomLookAround'])}\n"
-            if "{" in roomLookAround:
-                try:
-                    placeHolders = re.findall(r"{(.+), (.+), (.+), (.+)}", roomLookAround)
-                    completeSection = re.findall(r"{.+}", roomLookAround)[0]
-                    for info in placeHolders:
-                        try:
-                            index = int(info[0])
-                            if bool(storyData['rooms'][currentRoomIndex]['roomInteractables'][index][info[3]]):
-                                roomLookAround = roomLookAround.replace(completeSection, info[2])
-                            else:
-                                roomLookAround = roomLookAround.replace(completeSection, info[1])
-                        except ValueError:
-                            playerValue = str(info[0])
-                            if bool(storyData['player'][0][playerValue]):
-                                roomLookAround = roomLookAround.replace(completeSection, info[2])
-                            else:
-                                roomLookAround = roomLookAround.replace(completeSection, info[1])
-                except IndexError:
-                    completeSection = re.findall(r"{.+}", roomLookAround)[0]
-                    for info in placeHolders:
-                        roomLookAround = roomLookAround.replace(completeSection, info[1])
-                typewriter(roomLookAround)
+            currentRoom = storyData['rooms'][currentRoomIndex]
+            roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
+            typewriter(roomLookAround)
         except KeyError:
             typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n")
         waitForEnter()
@@ -387,9 +368,8 @@ def displayRoom():
     global quick
     try:
         currentRoom = storyData['rooms'][currentRoomIndex]
-
         roomName = str(currentRoom['roomName'])
-        roomDescription = eval(currentRoom['roomDescription'])
+        roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
         printHeader(roomName)
         if not quick:
             typewriter(roomDescription)

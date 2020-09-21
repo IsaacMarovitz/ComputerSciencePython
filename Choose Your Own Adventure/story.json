@@ -8,7 +8,7 @@
             "roomDescription": "'''This is your bedroom. {} It's cold in here. Someone's left the window open. This room connects to 'Hallway 1'.'''.format(currentRoom['roomDescription0'] if len(currentRoom['roomInteractables']) > 1 else currentRoom['roomDescription1'])",
             "roomDescription0": "Your phone and computer are on your desk.",
             "roomDescription1": "Your computer is on your desk.",
-            "roomLookAround": "{1, Your computer is on your desk., Your computer and your phone are on your desk., interactableCollectable}",
+            "roomLookAround": "'''{}'''.format(currentRoom['roomDescription0'] if len(currentRoom['roomInteractables']) > 1 else currentRoom['roomDescription1'])",
             "roomInteractables": [
                 {
                     "interactableName": "Computer",
@@ -39,7 +39,7 @@
         },
         {
             "roomName": "Hallway 1",
-            "roomDescription": "It's a hallway. It's even colder in here. The lights are {0, off, on, interactableUseableState}. This room connects to 'Bedroom', 'Bathroom 1', and 'Stairs 1'.",
+            "roomDescription": "'''It's a hallway. It's even colder in here. The lights are {}. This room connects to 'Bedroom', 'Bathroom 1', and 'Stairs 1'.'''.format('on' if currentRoom['roomInteractables'][0]['interactableUseableState'] else 'off'",
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
@@ -136,8 +136,11 @@
         },
         {
             "roomName": "Landing Bathroom",
-            "roomDescription": "It's a bathroom. {lights, You open the cupboards to find useful supplies but you can't see anything because it's too dark., You can see a couple bandages., f} This room connects to 'Stairs 2'.",
-            "roomLookAround": "It's a bathroom, with cupboards full of supplies.",
+            "roomDescription": "'''It's a bathroom. {}This room connects to 'Stairs 2'.'''.format(currentRoom['roomDescription0'] if not storyData['player'][0]['lights'] else currentRoom['roomDescription1'] if len(currentRoom['roomInteractables']) == 2 else currentRoom['roomDescription2'] if len(currentRoom['roomInteractables']) == 1 else '')",
+            "roomDescription0": "You open the cupboards to find useful supplies but you can't see anything because it's too dark. ",
+            "roomDescription1": "You can see a couple bandages. ",
+            "roomDescription2": "You can see a bandage. ",
+            "roomLookAround": "It's a bathroom, with cupboards full of supplies. ",
             "roomInteractables": [
                 {
                     "interactableName": "Bandage",
@@ -184,6 +187,6 @@
         }
     ],
     "inventory": [
-
+        
     ]
 }
