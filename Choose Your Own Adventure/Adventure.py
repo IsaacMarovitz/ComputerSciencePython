@@ -7,7 +7,7 @@
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 
-import sys, json, os, time, threading, re, PJEX
+import sys, json, os, time, threading, re
 
 # Variables
 
@@ -386,32 +386,10 @@ def displayRoom():
     global currentRoomIndex
     global quick
     try:
-        roomName = str(storyData['rooms'][currentRoomIndex]['roomName'])
-        roomDescription = str(storyData['rooms'][currentRoomIndex]['roomDescription']) + "\n\n"
-        # Solution taken from Source 4
-        # This finds any instance of {} I put in my roomDescription text, and turns it into an array of values using regex magic. It took me so long to find a regex value that worked
-        # correctly and I don't know why it does but it's probably fine.
-        if "{" in roomDescription:
-            try:
-                placeHolders = re.findall(r"{(.+), (.+), (.+), (.+)}", roomDescription)
-                completeSection = re.findall(r"{.+}", roomDescription)[0]
-                for info in placeHolders:
-                    try:
-                        index = int(info[0])
-                        if bool(storyData['rooms'][currentRoomIndex]['roomInteractables'][index][info[3]]):
-                            roomDescription = roomDescription.replace(completeSection, info[2])
-                        else:
-                            roomDescription = roomDescription.replace(completeSection, info[1])
-                    except ValueError:
-                        playerValue = str(info[0])
-                        if bool(storyData['player'][0][playerValue]):
-                            roomDescription = roomDescription.replace(completeSection, info[2])
-                        else:
-                            roomDescription = roomDescription.replace(completeSection, info[1])
-            except IndexError:
-                completeSection = re.findall(r"{.+}", roomDescription)[0]
-                for info in placeHolders:
-                    roomDescription = roomDescription.replace(completeSection, info[1])
+        currentRoom = storyData['rooms'][currentRoomIndex]
+
+        roomName = str(currentRoom['roomName'])
+        roomDescription = eval(currentRoom['roomDescription'])
         printHeader(roomName)
         if not quick:
             typewriter(roomDescription)
