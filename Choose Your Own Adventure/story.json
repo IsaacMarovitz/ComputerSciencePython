@@ -11,18 +11,18 @@
             "roomLookAround": "'''{}'''.format(currentRoom['roomDescription0'] if len(currentRoom['roomInteractables']) > 1 else currentRoom['roomDescription1'])",
             "roomInteractables": [
                 {
-                    "interactableName": "Computer",
+                    "interactableName": ["Computer"],
                     "interactableText": "It's your computer. You can see an IDE open with an overcomplicated Python script on screen. You shudder at its ridiculousness.",
                     "interactableCollectable": false,
                     "interactableUseable": false
                 },
                 {
-                    "interactableName": "Phone",
+                    "interactableName": ["Phone"],
                     "interactableText": "It's your phone. It has a flashlight, which might be useful. Maybe you should bring it.",
                     "interactableCollectable": true,
+                    "interactableBattleItem": false,
                     "interactableInventoryDescription": "It's your phone. It has a flashlight, which might be useful.",
                     "interactableUseable": true,
-                    "interactableSingleUse": false,
                     "interactableUseableDisabled": false,
                     "interactableUseableState": false,
                     "interactablePlayerValue": "lights",
@@ -43,11 +43,10 @@
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
-                    "interactableName": "Light Switch",
+                    "interactableName": ["Light Switch", "Lights", "LightSwitch"],
                     "interactableText": "It's a light switch. Not much else to it.",
                     "interactableCollectable": false,
                     "interactableUseable": true,
-                    "interactableSingleUse": false,
                     "interactableUseableDisabled": false,
                     "interactableUseableState": false,
                     "interactableUseText0": "The lights are off, turn them on? (y/n): ",
@@ -76,14 +75,8 @@
             "roomLookAround": "There are old family photos all along the walls. You don't even recognised half of them.",
             "roomInteractables": [
                 {
-                    "interactableName": "Picture",
+                    "interactableName": ["Picture", "Photo"],
                     "interactableText": "It's an old black and white photo of someone in your family you don't know the name of.",
-                    "interactableCollectable": false,
-                    "interactableUseable": false
-                },
-                {
-                    "interactableName": "Photo",
-                    "interactableText":"It's an old black and white photo of someone in your family you don't know the name of.",
                     "interactableCollectable": false,
                     "interactableUseable": false
                 }
@@ -98,11 +91,10 @@
             "roomLookAround": "The hallway is quite empty apart from a light switch on the wall.",
             "roomInteractables": [
                 {
-                    "interactableName": "Light Switch",
+                    "interactableName": ["Light Switch", "Lights", "LightSwitch"],
                     "interactableText": "It's a light switch. Not much else to it.",
                     "interactableCollectable": false,
                     "interactableUseable": true,
-                    "interactableSingleUse": false,
                     "interactableUseableDisabled": true,
                     "interactableUseableState": false,
                     "interactableUseText0": "The lights are off, turn them on? (y/n): ",
@@ -143,23 +135,23 @@
             "roomLookAround": "It's a bathroom, with cupboards full of supplies. ",
             "roomInteractables": [
                 {
-                    "interactableName": "Bandage",
+                    "interactableName": ["Bandage", "Bandages"],
                     "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
                     "interactableCollectable": true,
+                    "interactableBattleItem": true,
                     "interactableInventoryDescription": "It's a bandage you can use to health health.",
                     "interactableUseable": true,
-                    "interactableSingleUse": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
                     "interactableUseStrength": 5
                 },
                 {
-                    "interactableName": "Bandage",
+                    "interactableName": ["Bandage", "Bandages"],
                     "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
                     "interactableCollectable": true,
+                    "interactableBattleItem": true,
                     "interactableInventoryDescription": "It's a bandage you can use to health health.",
                     "interactableUseable": true,
-                    "interactableSingleUse": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
                     "interactableUseStrength": 5
@@ -177,15 +169,91 @@
             "roomConnections": [
                 "Landing Bathroom", "The End?"
             ]
-        }
-    ],
-    "player": [
+        },
         {
-            "name": "",
-            "lights": false,
-            "health": 20
+            "roomName": "The End?",
+            "roomDescription": "It's the final battle. As you enter the room, you finally see the monster lurking in the darkness. A group of anti-mask Karens! The door locks behind you. You see no choice but to fight. Use 'start battle' to initiate the fight!",
+            "roomLookAround": "The Karens stand poised ready to fight",
+            "battleText": "The Final Battle",
+            "roomInteractables": [],
+            "roomConnections": []
         }
     ],
+    "The Final Battle": {
+        "opponentName": "The Mega Karens",
+        "opponentASCII": "    (MCC1!!!)\n    (________)\n    (MCCC!1!CC1\n    (MMCCCIIIIC|\n    |(.)M(.)II|\n    |CC/M|MIII|\n    |MM---MIII/\n    |MC~~MIII/\n    ``-----/\n",
+        "opponentHealth": 100,
+        "opponentMoves": [
+            {
+                "moveName": "COVID Cough",
+                "moveDescription": "The Karens cough on you, covering you with COVID filled droplets.",
+                "playerReaction": "You fall back for a second, but your immune system fights fights it off.",
+                "damage": 10
+            },
+            {
+                "moveName": "Bad Haircut",
+                "moveDescription": "The Karens cut your hair to the traditional pac-man style karen-cut.",
+                "playerReaction": "Your disgusted by how bad it looks, and you grow back you hair through sheer determination.",
+                "damage": 5
+            },
+            {
+                "moveName": "Pack Attack",
+                "moveDescription": "The Karens slide towards you as one seathing mass, and strike you with insults and demands.",
+                "playerReaction": "Your hurt by their words, but you watch a motivation video and regain your strength.",
+                "damage": 15
+            },
+            {
+                "moveName": "Excuse Me, I Have a Medical Exception",
+                "moveDescription": "The Karens pepper you with bad interpretations of the law.",
+                "playerReaction": "Their idiocy hits stuns at a deep level, but you remain calm.",
+                "damage": 5
+            }
+        ],
+        "opponentEXMoves": [
+            {
+                "moveName": "I WANT TO SPEAK TO THE MANAGER",
+                "moveDescription": "The Karens scream at you with all of their might. They demand refunds immediatley or they'll call the police.",
+                "playerReaction": "The Karens speak so fast that you can't get a word in. You're severely fatigued after debating with them.",
+                "damage": 30
+            }
+        ],
+        "playerDeath": "Alas, the Karens were to powerful to overcome this time, but you must persevere...",
+        "playerWin": "Finally the wretched Karens utter their final complaint, as you strike the final blow. You've done it. Congratulations!"
+    },
+    "player": {
+        "name": "",
+        "lights": false,
+        "health": 50,
+        "playerMoves": [
+            {
+                "moveName": "Hand Wash",
+                "damage": 15,
+                "moveCounter": 1
+            },
+            {
+                "moveName": "Wear Your Mask",
+                "damage": 10,
+                "moveCounter": 2
+            },
+            {
+                "moveName": "Sanitizer Spray",
+                "damage": 20,
+                "moveCounter": 3
+            },
+            {
+                "moveName": "Social Distancing",
+                "damage": 10,
+                "moveCounter": 4
+            }
+        ],
+        "playerEXMoves": [
+            {
+                "moveName": "I AM THE MANAGER",
+                "damage": 30,
+                "moveCounter": 5
+            }
+        ]
+    },
     "inventory": [
 
     ]
