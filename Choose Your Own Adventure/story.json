@@ -143,7 +143,7 @@
                     "interactableUseable": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
-                    "interactableUseStrength": 5
+                    "interactableUseStrength": 20
                 },
                 {
                     "interactableName": ["Bandage", "Bandages"],
@@ -154,7 +154,7 @@
                     "interactableUseable": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
-                    "interactableUseStrength": 5
+                    "interactableUseStrength": 20
                 }
             ],
             "roomConnections": [
@@ -182,7 +182,7 @@
     "The Final Battle": {
         "opponentName": "The Mega Karens",
         "opponentASCII": "    (MCC1!!!)\n    (________)\n    (MCCC!1!CC1\n    (MMCCCIIIIC|\n    |(.)M(.)II|\n    |CC/M|MIII|\n    |MM---MIII/\n    |MC~~MIII/\n    ``-----/\n",
-        "opponentHealth": 100,
+        "opponentHealth": 70,
         "opponentMoves": [
             {
                 "moveName": "COVID Cough",
@@ -199,7 +199,7 @@
             {
                 "moveName": "Pack Attack",
                 "moveDescription": "The Karens slide towards you as one seathing mass, and strike you with insults and demands.",
-                "playerReaction": "Your hurt by their words, but you watch a motivation video and regain your strength.",
+                "playerReaction": "You're hurt by their words, but you watch a motivation video and regain your strength.",
                 "damage": 15
             },
             {
@@ -221,9 +221,9 @@
         "playerWin": "Finally the wretched Karens utter their final complaint, as you strike the final blow. You've done it. Congratulations!"
     },
     "player": {
-        "name": "",
+        "name": "Isaac",
         "lights": false,
-        "health": 50,
+        "health": 0,
         "playerMoves": [
             {
                 "moveName": "Hand Wash",

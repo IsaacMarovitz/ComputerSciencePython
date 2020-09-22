@@ -8,11 +8,10 @@
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 # 5. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json
 
-import sys, json, os, time, threading
+import sys, json, os, time, threading, random
 
 # Variables
 
-charWrapLimit = 100
 currentRoomIndex = 0
 currentBattleName = ""
 quick = False
@@ -36,21 +35,10 @@ def clear():
 
 # Solution taken from Source 2
 def typewriter(message):
-    charCount = 0
-    sleepTime = 0.5
     for char in message:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(0.02)
-        # Source End
-        charCount = charCount + 1
-        if char == "\r":
-            charCount = 0
-        if charCount > charWrapLimit and char == " ":
-            print("\r")
-            charCount = 0
-        if char == "." or char == "!":
-            time.sleep(sleepTime)
 
 def getTextUserInput(inputMessage, failureMessage):
     userInputReceived = False
@@ -126,19 +114,19 @@ def go(inputMessage):
                     waitForEnter()
                     inputReceivedEvent.wait()
                     getCommand()
-                    return True
+                    return 
     except KeyError:
         typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return False
+        return 
     else:
         typewriter(f"There's no connecting room called {originalMessage}.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return False
+        return 
 
 def look(inputMessage):
     global currentRoomIndex
@@ -158,7 +146,7 @@ def look(inputMessage):
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return True
+        return 
     else:
         originalMessage = inputMessage.strip().title()
         inputMessage = inputMessage.lower().replace(" ", "")
@@ -169,19 +157,19 @@ def look(inputMessage):
                     waitForEnter()
                     inputReceivedEvent.wait()
                     getCommand()
-                    return True
+                    return 
         except KeyError:
             typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
             waitForEnter()
             inputReceivedEvent.wait()
             getCommand()
-            return False
+            return 
 
         typewriter(f"No interactables called {originalMessage}.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return False
+        return 
 
 def useCheck(useable):
     if not useable['interactableUseableDisabled']:
@@ -198,7 +186,7 @@ def useCheck(useable):
                 waitForEnter()
                 inputReceivedEvent.wait()
                 getCommand()
-                return True
+                return 
             else:
                 waitForEnter()
                 inputReceivedEvent.wait()
@@ -216,7 +204,7 @@ def useCheck(useable):
                 waitForEnter()
                 inputReceivedEvent.wait()
                 getCommand()
-                return True
+                return 
             else:
                 waitForEnter()
                 inputReceivedEvent.wait()
@@ -226,7 +214,7 @@ def useCheck(useable):
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return True
+        return 
 
 def use(inputMessage):
     global currentRoomIndex
@@ -238,37 +226,37 @@ def use(inputMessage):
                 if str(name).lower().replace(" ", "") == inputMessage:
                     if not useable['interactableBattleItem']:
                         useCheck(useable)
-                        return True
+                        return 
                     else:
                         typewriter("You deside to save this item for a battle.\n")
                         waitForEnter()
                         inputReceivedEvent.wait()
                         getCommand()
-                        return False
+                        return 
         for useable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
             for name in useable['interactableName']:
                 if str(name).lower().replace(" ", "") == inputMessage and useable['interactableUseable']:
                     if not useable['interactableCollectable']:
                         useCheck(useable)
-                        return True
+                        return 
                     else:
                         typewriter(f"Add {originalMessage} to your inventory to use it.\n")
                         waitForEnter()
                         inputReceivedEvent.wait()
                         getCommand()
-                        return False
+                        return 
     except KeyError:
         typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return False
+        return 
                     
     typewriter(f"No usable objects called {originalMessage}.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
-    return False
+    return 
 
 def take(inputMessage):
     global currentRoomIndex
@@ -284,19 +272,19 @@ def take(inputMessage):
                     waitForEnter()
                     inputReceivedEvent.wait()
                     getCommand()
-                    return True
+                    return 
     except KeyError:
         typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
-        return False
+        return 
 
     typewriter(f"No collectable objects called {originalMessage}.\n")
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
-    return False
+    return 
 
 def stats():
     try:
@@ -329,9 +317,9 @@ def helpCmd(inputMessage):
     elif inputMessage == "stats":
         typewriter("stats = This command will tell you your current player stats.\n")
     elif inputMessage == "help":
-        typewriter("help ___ = This command will give you more information about a given command, or will tell you about all available commands.\n")
+        typewriter("help ___ = This command will give you more information about a given command, or will tell you all available commands.\n")
     else:
-        typewriter('''Avilable Commands:\n    go\n    look\n    use\n    take\n    inventory\n    stats\n    help\nType help followed by each command to learn more information about them.\n''')
+        typewriter('''Available Commands:\n    go\n    look\n    use\n    take\n    inventory\n    stats\n    help\nType help followed by each command to learn more information about them.\n''')
     waitForEnter()
     inputReceivedEvent.wait()
     getCommand()
@@ -347,11 +335,17 @@ def inventory():
     inputReceivedEvent.wait()
     getCommand()
 
-def battleUse(inputMessage):
-    pass
-
-def battleHelp(inputMessage):
-    pass
+def start():
+    global currentRoomIndex
+    global currentBattleName
+    try:
+        currentBattleName = storyData['rooms'][currentRoomIndex]['battleText']
+        getBattleCommand()
+    except KeyError:
+        typewriter("There's no battle to start in this room.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getCommand()
 
 def parseUserInput(inputMessage):
     inputMessage = str(inputMessage).lower()
@@ -405,11 +399,141 @@ def parseUserInput(inputMessage):
         inventory()
     elif textArray[0] == "cry":
         cry()
+    elif inputMessage == "start battle":
+        start()
     else:
         typewriter("Command not recognised.\n")
         waitForEnter()
         inputReceivedEvent.wait()
         getCommand()
+
+def battleWin():
+    global currentBattleName
+    typewriter(f"{storyData[currentBattleName]['playerWin']}\n")
+    typewriter(f"Congratulations! You completed Python Adventure (Quarantine Edition). Thank you for playing!\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
+
+def battleLose():
+    global currentBattleName
+    global currentRoomIndex
+    global storyData
+    global storyFile
+    typewriter(f"{storyData[currentBattleName]['playerDeath']}\n")
+    typewriter("You will now be sent back to the begining.\n")
+    name = storyData['player']['name']
+    try:
+        with open('story.json', 'r') as storyFile:
+            storyData = storyFile.read()
+    except FileNotFoundError:
+        sys.exit("Error: story.json is missing or corrupted!\nProgram exiting.")
+
+    try:
+        storyData = json.loads(storyData)
+    except json.decoder.JSONDecodeError:
+        sys.exit("Error: story.json is missing or corrupted!\nProgram exiting.")
+    currentRoomIndex = 0
+    storyData['player']['name'] = name
+    getCommand()
+
+
+def opponentTakeTurn():
+    global currentBattleName
+    randomMove = random.randint(0, len(storyData[currentBattleName]['opponentMoves'])-1)
+    move = storyData[currentBattleName]['opponentMoves'][randomMove]
+    storyData['player']['health'] = storyData['player']['health'] - move['damage']
+    typewriter(f"{storyData[currentBattleName]['opponentName']} used '{move['moveName']}'!\n{move['moveDescription']}\n{move['playerReaction']}\n{storyData['player']['name']} lost {move['damage']} HP.\n")
+    if storyData['player']['health'] <= 0:
+        battleLose()
+        return
+    else:
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getBattleCommand()
+        return
+
+def battleUse(inputMessage):
+    global currentBattleName
+    originalMessage = inputMessage.strip().title()
+    inputMessage = inputMessage.lower().replace(" ", "")
+    try:
+        for useable in storyData['inventory']:
+            for name in useable['interactableName']:
+                if str(name).lower().replace(" ", "") == inputMessage:
+                    if useable['interactableBattleItem']:
+                        userBool = getBooleanUserInput(str(useable['interactableUseText']), "Please only input y/n.\n")
+                        inputReceivedEvent.wait()
+                        if userBool:
+                            storyData['player'][useable['interactableUseStat']] = storyData['player'][useable['interactableUseStat']] + useable['interactableUseStrength']
+                            typewriter(f"Used {originalMessage}. {str(useable['interactableUseStat']).title()} increased by {str(useable['interactableUseStrength'])}.\n")
+                            storyData['inventory'].remove(useable)
+                            opponentTakeTurn()
+                            return 
+                        else:
+                            waitForEnter()
+                            inputReceivedEvent.wait()
+                            getBattleCommand()
+                    else:
+                        typewriter("You can't use this item in battle.\n")
+                        waitForEnter()
+                        inputReceivedEvent.wait()
+                        getBattleCommand()
+                        return 
+
+        for move in storyData['player']['playerMoves']:
+            if str(move['moveCounter']) == inputMessage or str(move['moveName']).lower().replace(" ", "") == inputMessage:
+                storyData[currentBattleName]['opponentHealth'] = storyData[currentBattleName]['opponentHealth'] - move['damage']
+                typewriter(f"{storyData['player']['name']} used '{move['moveName']}'! {storyData[currentBattleName]['opponentName']} lost {move['damage']} HP.\n\n")
+                if storyData[currentBattleName]['opponentHealth'] <= 0:
+                    battleWin()
+                    return
+                else:
+                    opponentTakeTurn()
+                    return 
+
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getBattleCommand()
+        return 
+
+def battleHelp(inputMessage):
+    if inputMessage == "use":
+        typewriter("use ___ = This command will use the object or move you pass in.\n")
+    elif inputMessage == "inventory":
+        typewriter("inventory = This command will print the current items in your inventory.\n")
+    elif inputMessage == "stats":
+        typewriter("stats = This command will tell you your current player stats.\n")
+    elif inputMessage == "help":
+        typewriter("help ___ = This command will give you more information about a given command, or will tell you all available commands.\n")
+    else:
+        typewriter('''Available Commands:\n    use\n    inventory\n    stats\n    help\nType help followed by each command to learn more information about them.\n''')
+    waitForEnter()
+    inputReceivedEvent.wait()
+    getBattleCommand()
+
+def battleInventory():
+    typewriter("You have the following items in your inventory.\n")
+    try:
+        for collectable in storyData['inventory']:
+            typewriter(f"   {collectable['interactableName'][0]} - {collectable['interactableInventoryDescription']}\n")
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
+    getBattleCommand()
+
+def battleStats():
+    try:
+        typewriter("You stats are as follows.\n")
+        typewriter(f"   Player Name - {storyData['player']['name']}\n")
+        typewriter(f"   HP - {str(storyData['player']['health'])}\n")
+    except KeyError:
+        typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
+    waitForEnter()
+    inputReceivedEvent.wait()
+    getBattleCommand()
 
 def parseUseBattleInput(inputMessage):
     inputMessage = str(inputMessage).lower()
@@ -432,9 +556,9 @@ def parseUseBattleInput(inputMessage):
     elif textArray[0] == "take":
         typewriter("You can't take anything during a battle.\n")
     elif textArray[0] == "inventory":
-        inventory()
+        battleInventory()
     elif textArray[0] == "stats":
-        stats()
+        battleStats()
     elif textArray[0] == "help":
         try:
             battleHelp(textArray[1])
@@ -446,7 +570,7 @@ def parseUseBattleInput(inputMessage):
         typewriter("Command not recognised.\n")
         waitForEnter()
         inputReceivedEvent.wait()
-        getCommand()
+        getBattleCommand()
 
 def getCommand():
     global quick
@@ -510,6 +634,7 @@ def displayBattle():
     print(f"\x1b[4m\x1b[1mMoves\x1b[0m\n")
     for move in storyData['player']['playerMoves']:
         print(f"[{move['moveCounter']}] {move['moveName']} ({move['damage']} Damage)    ", end='')
+    print("\n",end='')
 
     
 
