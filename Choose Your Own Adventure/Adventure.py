@@ -157,12 +157,13 @@ def look(inputMessage):
         inputMessage = inputMessage.lower().replace(" ", "")
         try:
             for interactable in storyData['rooms'][currentRoomIndex]['roomInteractables']:
-                if str(interactable['interactableName']).lower().replace(" ", "") == inputMessage:
-                    typewriter(interactable['interactableText'] + "\n")
-                    waitForEnter()
-                    inputReceivedEvent.wait()
-                    getCommand()
-                    return 
+                for name in interactable['interactableName']:
+                    if str(name).lower().replace(" ", "") == inputMessage:
+                        typewriter(interactable['interactableText'] + "\n")
+                        waitForEnter()
+                        inputReceivedEvent.wait()
+                        getCommand()
+                        return 
         except KeyError:
             typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
             waitForEnter()
@@ -702,6 +703,14 @@ displayRoom()
 quick = True
 getCommand()
 
-#displayBattle()
+
+# Peer Reviews
+
+# Celine Pirard
+# Have a more clear sense of direction. Liked the help command.
+
+# Ryan Yang
+# 
+
 # On my honour, I have neither given nor receieved unauthorised aid
 # Isaac Marovitz
