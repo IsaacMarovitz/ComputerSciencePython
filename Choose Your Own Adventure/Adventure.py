@@ -8,10 +8,11 @@
 # 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
 # 5. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json
 
-import sys, json, os, time, threading, random
+import sys, json, os, time, threading, random, textwrap
 
 # Variables
 
+charWrapLength = 100
 currentRoomIndex = 0
 currentBattleName = ""
 quick = False
@@ -35,10 +36,14 @@ def clear():
 
 # Solution taken from Source 2
 def typewriter(message):
+    message = textwrap.fill(message, charWrapLength, replace_whitespace = False, drop_whitespace = False)
     for char in message:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(0.02)
+
+def wrappedPrint(message):
+    print(textwrap.fill(message, charWrapLength, replace_whitespace = False, drop_whitespace = False))
 
 def getTextUserInput(inputMessage, failureMessage):
     userInputReceived = False
@@ -491,6 +496,12 @@ def battleUse(inputMessage):
                     opponentTakeTurn()
                     return 
 
+        typewriter(f"No moves or items called {originalMessage} found.\n")
+        waitForEnter()
+        inputReceivedEvent.wait()
+        getBattleCommand()
+        return
+
     except KeyError:
         typewriter("Hmmmm. I'm missing some data. Your story.json file may be incomplete.\n")
         waitForEnter()
@@ -618,12 +629,12 @@ def displayRoom():
         if not quick:
             typewriter(roomDescription)
         else:
-            print(roomDescription)
+            wrappedPrint(roomDescription)
     except KeyError:
         if not quick:
             typewriter("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
         else:
-            print("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
+            wrappedPrint("Hmmmm. I'm missing some data about this room. Your story.json file may be incomplete.\n\n")
 
 def displayBattle():
     global currentBattleName
@@ -640,6 +651,7 @@ def displayBattle():
 
 # TO DO
 # Change out 'waitForEnter' for a wait function It's cumbersome 
+# IMPLEMENT EX MOVES IN BATTLES
 
 # Program
 

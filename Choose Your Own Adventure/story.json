@@ -128,7 +128,7 @@
         },
         {
             "roomName": "Landing Bathroom",
-            "roomDescription": "'''It's a bathroom. {}This room connects to 'Stairs 2'.'''.format(currentRoom['roomDescription0'] if not storyData['player'][0]['lights'] else currentRoom['roomDescription1'] if len(currentRoom['roomInteractables']) == 2 else currentRoom['roomDescription2'] if len(currentRoom['roomInteractables']) == 1 else '')",
+            "roomDescription": "'''It's a bathroom. {}This room connects to 'Stairs 2'.'''.format(currentRoom['roomDescription0'] if not storyData['player']['lights'] else currentRoom['roomDescription1'] if len(currentRoom['roomInteractables']) == 2 else currentRoom['roomDescription2'] if len(currentRoom['roomInteractables']) == 1 else '')",
             "roomDescription0": "You open the cupboards to find useful supplies but you can't see anything because it's too dark. ",
             "roomDescription1": "You can see a couple bandages. ",
             "roomDescription2": "You can see a bandage. ",
@@ -221,9 +221,9 @@
         "playerWin": "Finally the wretched Karens utter their final complaint, as you strike the final blow. You've done it. Congratulations!"
     },
     "player": {
-        "name": "Isaac",
+        "name": "",
         "lights": false,
-        "health": 0,
+        "health": 50,
         "playerMoves": [
             {
                 "moveName": "Hand Wash",
