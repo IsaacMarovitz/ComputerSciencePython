@@ -717,5 +717,8 @@ getCommand()
 # I fixed the typo on the bandage. Increased the damage stats for enemy moves. I added hand sanitizer
 # to 'Bathroom 1'. I implemented a stamina system so that more damaging move take more energy.
 
+# Daniel Marovitz
+# Liked it overall. Found the 'use' command a little hard to understand at first. Found several typos.
+
 # On my honour, I have neither given nor receieved unauthorised aid
 # Isaac Marovitz

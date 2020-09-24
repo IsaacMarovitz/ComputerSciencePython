@@ -1,7 +1,7 @@
 {
     "aWordOfWarning": "This is the story.json file. If you mess with it Adventure.py will not be able to run correctly.",
-    "formatingRules": "All room and interactable names must be in Title Case. Every scentence must finish with a full stop.",
-    "exposition": "The year is 2020. A global pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.",
+    "formatingRules": "All room and interactable names must be in Title Case. Every sentence must finish with a full stop.",
+    "exposition": "The year is 2020. A pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.",
     "rooms": [
         {
             "roomName": "Bedroom",
@@ -43,7 +43,7 @@
             "roomLookAround": "There's a light switch on the wall.",
             "roomInteractables": [
                 {
-                    "interactableName": ["Light Switch", "Lights", "LightSwitch"],
+                    "interactableName": ["Light Switch", "Lights"],
                     "interactableText": "It's a light switch. Not much else to it.",
                     "interactableCollectable": false,
                     "interactableUseable": true,
@@ -72,7 +72,7 @@
                     "interactableBattleItem": true,
                     "interactableInventoryDescription": "It's some hand sanitizer you can use to heal health.",
                     "interactableUseable": true,
-                    "interactableUseText": "Use the bandage? (y/n): ",
+                    "interactableUseText": "Use the hand sanitizer? (y/n): ",
                     "interactableUseStat": "health",
                     "interactableUseStrength": 10
                 }
@@ -84,7 +84,7 @@
         {
             "roomName": "Stairs 1",
             "roomDescription": "The stairs lead down to the floor below. You can hear something terrible downstairs. You still can't quite place what it is yet. This room connects to 'Hallway 1' and 'Hallway 2'.",
-            "roomLookAround": "There are old family photos all along the walls. You don't even recognised half of them.",
+            "roomLookAround": "There are old family photos all along the walls. You don't even recognise half of them.",
             "roomInteractables": [
                 {
                     "interactableName": ["Picture", "Photo"],
@@ -99,7 +99,7 @@
         },
         {
             "roomName": "Hallway 2",
-            "roomDescription": "This is your parents' floor. This hallway is just as dark and cold as the last. The sound from downstairs is lounder now. You can start to discern shrill voices chittering away. This room connects to 'Stairs 1', 'Master Bedroom' and 'Stairs 2'.",
+            "roomDescription": "This is your parents' floor. This hallway is just as dark and cold as the last. The sound from downstairs is louder now. You can start to discern shrill voices chittering away. This room connects to 'Stairs 1', 'Master Bedroom' and 'Stairs 2'.",
             "roomLookAround": "The hallway is quite empty apart from a light switch on the wall.",
             "roomInteractables": [
                 {
@@ -123,7 +123,7 @@
         {
             "roomName": "Master Bedroom",
             "roomDescription": "You stand outside your parents' room. You decide that you shouldn't go in and risk waking them up. This room connects to 'Hallway 2'.",
-            "roomLookAround": "You stand outside your parents' room. Their doors stands menacingly. Let's try not to wake them up.",
+            "roomLookAround": "You stand outside your parents' room. Their door stands menacingly. Let's try not to wake them up.",
             "roomInteractables": [],
             "roomConnections": [
                 "Hallway 2"
@@ -198,39 +198,39 @@
         "opponentMoves": [
             {
                 "moveName": "COVID Cough",
-                "moveDescription": "The Karens cough on you, covering you with COVID filled droplets.",
-                "playerReaction": "You fall back for a second, but your immune system fights fights it off.",
+                "moveDescription": "The Karens cough on you, covering you with COVID-filled droplets.",
+                "playerReaction": "You fall back for a second, but your immune system fights it off.",
                 "damage": 15
             },
             {
                 "moveName": "Bad Haircut",
                 "moveDescription": "The Karens cut your hair to the traditional pac-man style karen-cut.",
-                "playerReaction": "Your disgusted by how bad it looks, and you grow back you hair through sheer determination.",
+                "playerReaction": "Your disgusted by how bad it looks and you grow back you hair through sheer determination.",
                 "damage": 10
             },
             {
                 "moveName": "Pack Attack",
-                "moveDescription": "The Karens slide towards you as one seathing mass, and strike you with insults and demands.",
-                "playerReaction": "You're hurt by their words, but you watch a motivation video and regain your strength.",
+                "moveDescription": "The Karens slide towards you as one seething mass, and strike you with insults and demands.",
+                "playerReaction": "You're hurt by their words, but you watch a motivational video and regain your strength.",
                 "damage": 25
             },
             {
                 "moveName": "Excuse Me, I Have a Medical Exception",
                 "moveDescription": "The Karens pepper you with bad interpretations of the law.",
-                "playerReaction": "Their idiocy hits stuns at a deep level, but you remain calm.",
+                "playerReaction": "Their idiocy hits you at a deep level, but you remain calm.",
                 "damage": 15
             }
         ],
         "opponentEXMoves": [
             {
                 "moveName": "I WANT TO SPEAK TO THE MANAGER",
-                "moveDescription": "The Karens scream at you with all of their might. They demand refunds immediatley or they'll call the police.",
+                "moveDescription": "The Karens scream at you with all of their might. They demand refunds immediately or they'll call the police.",
                 "playerReaction": "The Karens speak so fast that you can't get a word in. You're severely fatigued after debating with them.",
                 "damage": 30
             }
         ],
-        "playerDeath": "Alas, the Karens were to powerful to overcome this time, but you must persevere...",
-        "playerWin": "Finally the wretched Karens utter their final complaint, as you strike the final blow. You've done it. Congratulations!"
+        "playerDeath": "Alas, the Karens were too powerful to overcome this time, but you must persevere...",
+        "playerWin": "Finally the wretched Karens utter their final complaint, as you strike the final blow. You've done it."
     },
     "player": {
         "name": "",
