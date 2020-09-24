@@ -84,7 +84,7 @@ def getBooleanUserInput(inputMessage, failureMessage):
     return userInput
 
 def waitForEnter():
-    typewriter("Press ENTER to continue.")
+    typewriter(f"\x1b[4m\x1b[1mPress ENTER to continue.\x1b[0m")
     input("")
     inputReceivedEvent.set()
 
@@ -651,8 +651,9 @@ def displayBattle():
     
 
 # TO DO
-# Change out 'waitForEnter' for a wait function It's cumbersome 
 # IMPLEMENT EX MOVES IN BATTLES
+# IMPLEMENT STAMINA
+# IMPLEMENT UNDERLINED TEXT FOR IMPORTANT INFO TO GUIDE PLAYER BETTER
 
 # Program
 
@@ -703,14 +704,18 @@ displayRoom()
 quick = True
 getCommand()
 
-
 # Peer Reviews
 
 # Celine Pirard
 # Have a more clear sense of direction. Liked the help command.
 
-# Ryan Yang
-# 
+# Joy An
+# Bandage had a typo. Battle wasn't challenging enough, so the player had no insentive
+# to use healing items. Player has no insentive not to just spam the most damaging move. 
+# Wanted more interactable objects in 'Bathroom 1'. Liked the battle system
+
+# I fixed the typo on the bandage. Increased the damage stats for enemy moves. I added hand sanitizer
+# to 'Bathroom 1'. I implemented a stamina system so that more damaging move take more energy.
 
 # On my honour, I have neither given nor receieved unauthorised aid
 # Isaac Marovitz

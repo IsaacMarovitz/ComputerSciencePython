@@ -62,9 +62,21 @@
         },
         {
             "roomName": "Bathroom 1",
-            "roomDescription": "It's a bathroom. This room connects to 'Hallway 1'.",
-            "roomLookAround": "There's nothing really in here.",
-            "roomInteractables": [],
+            "roomDescription": "It's a bathroom. There might be some useful items in here. This room connects to 'Hallway 1'.",
+            "roomLookAround": "There's some hand sanitizer in the cupboard.",
+            "roomInteractables": [
+                {
+                    "interactableName": ["Hand Sanitizer", "Hand Sanitiser"],
+                    "interactableText": "It's some hand sanitizer that could heal some health in a battle.",
+                    "interactableCollectable": true,
+                    "interactableBattleItem": true,
+                    "interactableInventoryDescription": "It's some hand sanitizer you can use to heal health.",
+                    "interactableUseable": true,
+                    "interactableUseText": "Use the bandage? (y/n): ",
+                    "interactableUseStat": "health",
+                    "interactableUseStrength": 10
+                }
+            ],
             "roomConnections": [
                 "Hallway 1"
             ]
@@ -139,7 +151,7 @@
                     "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
                     "interactableCollectable": true,
                     "interactableBattleItem": true,
-                    "interactableInventoryDescription": "It's a bandage you can use to health health.",
+                    "interactableInventoryDescription": "It's a bandage you can use to heal health.",
                     "interactableUseable": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
@@ -150,7 +162,7 @@
                     "interactableText": "It's a bandage you could use to heal health. It might be useful in a fight.",
                     "interactableCollectable": true,
                     "interactableBattleItem": true,
-                    "interactableInventoryDescription": "It's a bandage you can use to health health.",
+                    "interactableInventoryDescription": "It's a bandage you can use to heal health.",
                     "interactableUseable": true,
                     "interactableUseText": "Use the bandage? (y/n): ",
                     "interactableUseStat": "health",
@@ -188,25 +200,25 @@
                 "moveName": "COVID Cough",
                 "moveDescription": "The Karens cough on you, covering you with COVID filled droplets.",
                 "playerReaction": "You fall back for a second, but your immune system fights fights it off.",
-                "damage": 10
+                "damage": 15
             },
             {
                 "moveName": "Bad Haircut",
                 "moveDescription": "The Karens cut your hair to the traditional pac-man style karen-cut.",
                 "playerReaction": "Your disgusted by how bad it looks, and you grow back you hair through sheer determination.",
-                "damage": 5
+                "damage": 10
             },
             {
                 "moveName": "Pack Attack",
                 "moveDescription": "The Karens slide towards you as one seathing mass, and strike you with insults and demands.",
                 "playerReaction": "You're hurt by their words, but you watch a motivation video and regain your strength.",
-                "damage": 15
+                "damage": 25
             },
             {
                 "moveName": "Excuse Me, I Have a Medical Exception",
                 "moveDescription": "The Karens pepper you with bad interpretations of the law.",
                 "playerReaction": "Their idiocy hits stuns at a deep level, but you remain calm.",
-                "damage": 5
+                "damage": 15
             }
         ],
         "opponentEXMoves": [
@@ -224,6 +236,7 @@
         "name": "",
         "lights": false,
         "health": 50,
+        "stamina": 100,
         "playerMoves": [
             {
                 "moveName": "Hand Wash",
