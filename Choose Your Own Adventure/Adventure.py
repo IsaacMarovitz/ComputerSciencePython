@@ -1,12 +1,24 @@
 # Isaac Marovitz
 # 18/09/2020
-# Descriptions Do not touch story.txt or art.txt 
+
+# Description:
+# This is my Choose Your Own Adventure Python Project. The main goal that I wanted to achieve when making this was,
+# trying to hardcode as little as possible in terms of text and interactions. In order to do that I decided to store
+# all text and interactables in a seperate 'story.json' file. This would keep this python file cleaner and it would mean
+# that this script is reusable for anyone who wants to create their own Choose Your Own Adventure game with my systems.
+# I wanted to make world a little more interactable, so I ended up using .format() functions at the end of my string sin 
+# the story.json file as this would let me dynamially change the text depending on the different values in the python file.
+# This is by no means a perfect system (and as you'll see quite lengthy) but it made the gameplay a lot more interactive than
+# it otherwise would be. I have caught all errors that the player can cause through typing inputs, but there are likely several
+# uncaught exceptions that occur if you mess with the data in 'story.json'. Overall I'm quite happy with how this project
+# turned out. There are a few more things I would've liked to add, but I ran out of time and I already spent a lot of time
+# on this project. 
+
 # Sources:
 # 1. https://www.geeksforgeeks.org/clear-screen-python/
 # 2. https://www.youtube.com/watch?time_continue=184&v=2h8e0tXHfk0&feature=emb_logo&ab_channel=LearnLearnScratchTutorials
 # 3. https://blog.miguelgrinberg.com/post/how-to-make-python-wait
-# 4. https://stackoverflow.com/questions/14061724/how-can-i-find-all-placeholders-for-str-format-in-a-python-string-using-a-regex
-# 5. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json
+# 4. Help from CPU espically from Max Fan who helped with getting str.format() working correctly with story.json, and Joy An for finding a lot of errors and typos.
 
 import sys, json, os, time, threading, random, textwrap
 
@@ -23,11 +35,13 @@ except:
     skipIntro = False
 
 # Input wait solution taken from Source 3
+# Events allow me to halt the program so that it doesn't keep running UNTIL I've received a valid input from the user.
 inputReceivedEvent = threading.Event()
 
 # Functions
 
 # Solution taken from Source 1
+# This functions just uses the appropriate clear function for each operating system so that the output doesn't turn into a giant wall of text.
 def clear():
     if os.name == "nt":
         os.system('cls')
@@ -35,6 +49,8 @@ def clear():
         os.system("clear")
 
 # Solution taken from Source 2
+# This basically just prints out a message character by character to create a typing effect. sys.stdout.write() is sort of like print(), but
+# it requires sys.stdout.flush() to be called right after as otherwise sys.stdout.write() won't print to the console immediately.
 def typewriter(message):
     message = textwrap.fill(message, charWrapLength, replace_whitespace = False, drop_whitespace = False)
     for char in message:
@@ -83,11 +99,14 @@ def getBooleanUserInput(inputMessage, failureMessage):
     inputReceivedEvent.set()
     return userInput
 
+# \x1b[4m and \x1b[1m makes the text bold and underlined and \x1b[0m resets the styling so that subsequent messages don't print with 
+# the same styling.
 def waitForEnter():
     typewriter(f"\x1b[4m\x1b[1mPress ENTER to continue.\x1b[0m")
     input("")
     inputReceivedEvent.set()
 
+# This gets my JSON data from the file and turns it into a Python array that I can just get data from throughout my program.
 try:
     with open('story.json', 'r') as storyFile:
         storyData = storyFile.read()
@@ -140,6 +159,9 @@ def look(inputMessage):
             currentRoom = storyData['rooms'][currentRoomIndex]
             if "format" in currentRoom['roomLookAround']:
                 try:
+                    # Source 4
+                    # This runs the code inside the .format() functions in my JSON data, which effectivly does the same thing as an f string
+                    # I can't use an f string because you can't nest them, and you can just cast a string from JSON data to an f string
                     roomLookAround = f"You look around. {eval(currentRoom['roomLookAround'])}\n"
                 except SyntaxError:
                     roomLookAround = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
@@ -621,6 +643,9 @@ def displayRoom():
         roomName = str(currentRoom['roomName'])
         if "format" in currentRoom['roomDescription']:
             try:
+                # Source 4
+                # This runs the code inside the .format() functions in my JSON data, which effectivly does the same thing as an f string
+                # I can't use an f string because you can't nest them, and you can just cast a string from JSON data to an f string
                 roomDescription = f"{eval(currentRoom['roomDescription'])}\n"
             except SyntaxError:
                 roomDescription = "Hmmmm. There was error when loading this room's description. Your story.json file may be incomplete.\n"
@@ -653,7 +678,6 @@ def displayBattle():
 # TO DO
 # IMPLEMENT EX MOVES IN BATTLES
 # IMPLEMENT STAMINA
-# IMPLEMENT UNDERLINED TEXT FOR IMPORTANT INFO TO GUIDE PLAYER BETTER
 
 # Program
 
@@ -708,17 +732,23 @@ getCommand()
 
 # Celine Pirard
 # Have a more clear sense of direction. Liked the help command.
+#
+# I added a few more areas of highlighted text and added more description to areas to make
+# it a bit clearer. 
 
 # Joy An
 # Bandage had a typo. Battle wasn't challenging enough, so the player had no insentive
 # to use healing items. Player has no insentive not to just spam the most damaging move. 
 # Wanted more interactable objects in 'Bathroom 1'. Liked the battle system
-
+#
 # I fixed the typo on the bandage. Increased the damage stats for enemy moves. I added hand sanitizer
-# to 'Bathroom 1'. I implemented a stamina system so that more damaging move take more energy.
+# to 'Bathroom 1'. I was going to implement a stamina system so that more damaging move take more energy,
+# but I didnt quite have enough time to make it.
 
 # Daniel Marovitz
 # Liked it overall. Found the 'use' command a little hard to understand at first. Found several typos.
+#
+# I fixed the typos.
 
 # On my honour, I have neither given nor receieved unauthorised aid
 # Isaac Marovitz

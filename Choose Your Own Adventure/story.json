@@ -1,6 +1,6 @@
 {
     "aWordOfWarning": "This is the story.json file. If you mess with it Adventure.py will not be able to run correctly.",
-    "formatingRules": "All room and interactable names must be in Title Case. Every sentence must finish with a full stop.",
+    "formatingRules": "Every sentence must finish with a full stop, and all interactableName must be an array",
     "exposition": "The year is 2020. A pandemic has taken over the world, and you're stuck at home. It's getting late, it's almost 1 AM now, but you haven't been able to sleep yet. Suddenly you hear a noise from downstairs. Better go check it out.",
     "rooms": [
         {
