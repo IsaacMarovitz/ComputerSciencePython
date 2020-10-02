@@ -1,4 +1,4 @@
-import sys
+import sys, random
 
 try:
     width = int(sys.argv[1])
@@ -28,13 +28,46 @@ except ValueError:
     sys.exit("Number of mines can only be an interger!\nProgram exiting.")
 
 mineGrid = []
-tempWidthGrid = []
-
-for x in range(0, width):
-    tempWidthGrid.append('*')
 
 for x in range(0, height):
+    tempWidthGrid = []
+    for x in range(0, width):
+        tempWidthGrid.append('0')
     mineGrid.append(tempWidthGrid)
 
+for x in range(0, mineCount):
+    xPosition = random.randint(0, width-1)
+    yPosition = random.randint(0, height-1)
+    mineGrid[yPosition][xPosition] = '*'
+
+for y in range(0, height):
+    for x in range(0, width):
+        if mineGrid[y][x] != '*':
+            surroundingMineCount = 0
+            if y < height-1 and x > 0 and mineGrid[y+1][x-1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if y < height-1 and mineGrid[y+1][x] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if y < height-1 and x < width-1 and mineGrid[y+1][x+1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if x > 0 and mineGrid[y][x-1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if x < width-1 and mineGrid[y][x+1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if y > 0 and x > 0 and mineGrid[y-1][x-1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if y > 0 and mineGrid[y-1][x] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            if y > 0 and x < width-1 and mineGrid[y-1][x+1] == '*':
+                surroundingMineCount = surroundingMineCount + 1
+            mineGrid[y][x] = surroundingMineCount
+
+def printGrid():
+    for y in range(0, height):
+        for x in range(0, width):
+            print(mineGrid[y][x], end=' ')
+        print('\n',end='')
+
+printGrid()
 
 input("Press ENTER to exit")
