@@ -6,7 +6,7 @@ import sys, random, os, time
 
 try:
     width = int(sys.argv[1])
-    if width < 0 or width > 50:
+    if width < 1 or width > 50:
         sys.exit("Width must be greater than 0 and less than 50!\nProgram exiting.")
 except IndexError:
     sys.exit("Width not given!\nProgram exiting.")
@@ -15,7 +15,7 @@ except ValueError:
 
 try:
     height = int(sys.argv[2])
-    if height < 0 or width > 50:
+    if height < 1 or width > 50:
         sys.exit("Height must be greater than 0 and less than 50!\nProgram exiting.")
 except IndexError:
     sys.exit("Height not given!\nProgram exiting.")
@@ -24,7 +24,7 @@ except ValueError:
 
 try:
     mineCount = int(sys.argv[3])
-    if mineCount < 0 or mineCount > (width * height):
+    if mineCount < 1 or mineCount > (width * height):
         sys.exit("Number of mines must be greater than 0 and less than the number of grid squares!\nProgram exiting.")
 except IndexError:
     sys.exit("Number of mines not given!\nProgram exiting.")
@@ -122,6 +122,17 @@ def floodFillCheck(xPos, yPos):
                 gameGrid[yPos-1][xPos+1] = True
                 floodFillCheck(xPos+1, yPos-1)
 
+def checkWin():
+    totalSqauresLeft = 0
+    for x in range(0, width):
+        for y in range(0, height):
+            if mineGrid[y][x] != '*' and gameGrid[y][x] == False:
+                totalSqauresLeft = totalSqauresLeft + 1
+    if totalSqauresLeft == 0:
+        return True
+    else:
+        return False
+
 def parseUserInput(inputMessage):
     inputMessage = inputMessage.strip().split(" ")
     try:
@@ -144,15 +155,19 @@ def parseUserInput(inputMessage):
                 floodFillCheck(xPos, yPos)
                 if mineGrid[yPos][xPos] == '*':
                     print("You died!")
-                    time.sleep(1)
+                    return
             else:
                 print("You cannot reveal sqaures with a flag!")
                 time.sleep(1)
     except ValueError:
         print("Only input intergers for coordinates!")
         time.sleep(1)
-    printGrid()
-    parseUserInput(input("Input coords: "))
+    if checkWin():
+        printGrid()
+        print("You won!")
+    else:
+        printGrid()
+        parseUserInput(input("Input coords: "))
 
 def printGrid():
     clear()
