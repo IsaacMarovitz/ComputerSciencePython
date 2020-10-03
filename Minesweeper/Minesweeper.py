@@ -134,15 +134,16 @@ def parseUserInput(inputMessage):
                 gameGrid[yPos][xPos] = False
             else:
                 print("You can't place flags on revealed squares!")
-                time.sleep(0.5)
+                time.sleep(1)
     except IndexError:
         if gameGrid[yPos][xPos] != 'F':
             floodFillCheck(xPos, yPos)
             if mineGrid[yPos][xPos] == '*':
                 print("You died!")
+                time.sleep(1)
         else:
             print("You cannot reveal sqaures with a flag!")
-            time.sleep(0.5)
+            time.sleep(1)
     printGrid()
     parseUserInput(input("Input coords: "))
 
