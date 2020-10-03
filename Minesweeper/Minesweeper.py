@@ -143,22 +143,48 @@ def parseUserInput(inputMessage):
                 time.sleep(1)
         else:
             print("You cannot reveal sqaures with a flag!")
-            time.sleep(1)
+            time.sleep(1    )
     printGrid()
     parseUserInput(input("Input coords: "))
 
 def printGrid():
     clear()
+    print('┌',end='')
+    for x in range(0, width):
+        if x < width-1:
+            print('───┬', end='')
+        else:
+            print('───┐', end='')
+    print('\n', end='')
     for y in range(0, height):
-        for x in range(0, width):
+        for x in range (0, width):
+            print('│', end='')
             if gameGrid[y][x] == 'F':
-                print('F', end=' ')
+                print(' F ', end='')
             else:
                 if gameGrid[y][x]:
-                    print(mineGrid[y][x], end=' ')
+                    print(f" {mineGrid[y][x]} ", end='')
                 else:
-                    print('-', end=' ')
+                    print(' - ', end='')
+            if not (x < width-1):
+                print('│', end='')
         print('\n',end='')
+        if y < height-1:
+            print('├', end='')
+        else:
+            print('└', end='')
+        for x in range(0, width):
+            if y < height-1:
+                if x < width-1:
+                    print('───┼', end='')
+                else:
+                    print('───┤', end='')
+            else:
+                if x < width-1:
+                    print('───┴', end='')
+                else:
+                    print('───┘', end='')
+        print('\n', end='')
 
 createMineGrid(0, 0)
 printGrid()
