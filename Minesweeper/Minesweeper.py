@@ -123,27 +123,34 @@ def floodFillCheck(xPos, yPos):
                 floodFillCheck(xPos+1, yPos-1)
 
 def parseUserInput(inputMessage):
-    inputMessage = inputMessage.split(" ")
-    xPos = int(inputMessage[0]) - 1
-    yPos = int(inputMessage[1]) - 1
+    inputMessage = inputMessage.strip().split(" ")
     try:
-        if inputMessage[2] == 'f' or inputMessage[2] == 'F':
-            if gameGrid[yPos][xPos] == False:
-                gameGrid[yPos][xPos] = 'F'
-            elif gameGrid[yPos][xPos] == 'F':
-                gameGrid[yPos][xPos] = False
+        xPos = int(inputMessage[0]) - 1
+        yPos = int(inputMessage[1]) - 1
+        try:
+            if inputMessage[2] == 'f' or inputMessage[2] == 'F':
+                if gameGrid[yPos][xPos] == False:
+                    gameGrid[yPos][xPos] = 'F'
+                elif gameGrid[yPos][xPos] == 'F':
+                    gameGrid[yPos][xPos] = False
+                else:
+                    print("You can't place flags on revealed squares!")
+                    time.sleep(1)
             else:
-                print("You can't place flags on revealed squares!")
+                print("Type 'f' to place a flag at the given coordinates!")
                 time.sleep(1)
-    except IndexError:
-        if gameGrid[yPos][xPos] != 'F':
-            floodFillCheck(xPos, yPos)
-            if mineGrid[yPos][xPos] == '*':
-                print("You died!")
+        except IndexError:
+            if gameGrid[yPos][xPos] != 'F':
+                floodFillCheck(xPos, yPos)
+                if mineGrid[yPos][xPos] == '*':
+                    print("You died!")
+                    time.sleep(1)
+            else:
+                print("You cannot reveal sqaures with a flag!")
                 time.sleep(1)
-        else:
-            print("You cannot reveal sqaures with a flag!")
-            time.sleep(1    )
+    except ValueError:
+        print("Only input intergers for coordinates!")
+        time.sleep(1)
     printGrid()
     parseUserInput(input("Input coords: "))
 
