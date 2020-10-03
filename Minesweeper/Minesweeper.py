@@ -52,10 +52,7 @@ def createMineGrid(startX, startY):
         xPosition = random.randint(0, width-1)
         yPosition = random.randint(0, height-1)
         if mineGrid[yPosition][xPosition] != '*':
-            if startX == xPosition or startY == yPosition:
-                # For some reason this check fails to catch mines at the start occasinaly 
-                pass
-            else:
+            if startX != xPosition and startY != yPosition:
                 mineGrid[yPosition][xPosition] = '*'
                 totalMineCount = totalMineCount + 1
 
@@ -80,7 +77,7 @@ def createMineGrid(startX, startY):
                 if y > 0 and x < width-1 and mineGrid[y-1][x+1] == '*':
                     surroundingMineCount = surroundingMineCount + 1
                 mineGrid[y][x] = surroundingMineCount
-    createGameGrid(0, 0)
+    createGameGrid(startX, startY)
 
 def createGameGrid(startX, startY):
     for _ in range(0, height):
@@ -211,7 +208,31 @@ def printGrid():
                     print('───┘', end='')
         print('\n', end='')
 
-createMineGrid(0, 0)
+clear()
+print('Welcome to Minesweeper\n')
+startCoordsReceived = False
+
+while not startCoordsReceived:
+    try:
+        inputMessage = input('Where do you want to start? Input coords (x & y): ')
+        inputMessage = inputMessage.strip().split(' ')
+        xCoord = int(inputMessage[0]) - 1
+        yCoord = int(inputMessage[1]) - 1
+        startCoordsReceived = True
+    except IndexError:
+        print("Please input an x AND a y coordinate seperated by a space.")
+        startCoordsReceived = False
+        time.sleep(1)
+        clear()
+        print('Welcome to Minesweeper\n')
+    except ValueError:
+        print("Please only input whole intergers.")
+        startCoordsReceived = False
+        time.sleep(1)
+        clear()
+        print('Welcome to Minesweeper\n')
+
+createMineGrid(xCoord, yCoord)
 printGrid()
 parseUserInput(input("Input coords: "))
 
