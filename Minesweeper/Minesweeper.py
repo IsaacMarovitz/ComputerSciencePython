@@ -6,8 +6,8 @@ import sys, random, os, time
 
 try:
     width = int(sys.argv[1])
-    if width < 1 or width > 50:
-        sys.exit("Width must be greater than 0 and less than 50!\nProgram exiting.")
+    if width < 1 or width > 30:
+        sys.exit("Width must be greater than 0 and less than 30!\nProgram exiting.")
 except IndexError:
     sys.exit("Width not given!\nProgram exiting.")
 except ValueError:
@@ -15,8 +15,8 @@ except ValueError:
 
 try:
     height = int(sys.argv[2])
-    if height < 1 or width > 50:
-        sys.exit("Height must be greater than 0 and less than 50!\nProgram exiting.")
+    if height < 1 or width > 30:
+        sys.exit("Height must be greater than 0 and less than 30!\nProgram exiting.")
 except IndexError:
     sys.exit("Height not given!\nProgram exiting.")
 except ValueError:
@@ -218,7 +218,14 @@ while not startCoordsReceived:
         inputMessage = inputMessage.strip().split(' ')
         xCoord = int(inputMessage[0]) - 1
         yCoord = int(inputMessage[1]) - 1
-        startCoordsReceived = True
+        if xCoord < width and yCoord < height:
+            startCoordsReceived = True
+        else:
+            print(f"Width and height must be between 0 and {width} and {height} respectively!")
+            startCoordsReceived = False
+            time.sleep(1)
+            clear()
+            print('Welcome to Minesweeper\n')    
     except IndexError:
         print("Please input an x AND a y coordinate seperated by a space.")
         startCoordsReceived = False
