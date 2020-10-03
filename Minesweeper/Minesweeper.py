@@ -2,7 +2,7 @@
 # Sources:
 # 1. http://inventwithpython.com/blog/2011/08/11/recursion-explained-with-the-flood-fill-algorithm-and-zombies-and-cats/
 
-import sys, random
+import sys, random, os, time
 
 try:
     width = int(sys.argv[1])
@@ -34,10 +34,16 @@ except ValueError:
 mineGrid = []
 gameGrid = []
 
+def clear():
+    if os.name == "nt":
+        os.system('cls')
+    else:
+        os.system("clear")
+
 def createMineGrid(startX, startY):
     for _ in range(0, height):
         tempWidthGrid = []
-        for _ in range(0, width):
+        for x in range(0, width):
             tempWidthGrid.append('0')
         mineGrid.append(tempWidthGrid)
 
@@ -47,6 +53,7 @@ def createMineGrid(startX, startY):
         yPosition = random.randint(0, height-1)
         if mineGrid[yPosition][xPosition] != '*':
             if startX == xPosition or startY == yPosition:
+                # For some reason this check fails to catch mines at the start occasinaly 
                 pass
             else:
                 mineGrid[yPosition][xPosition] = '*'
@@ -86,48 +93,75 @@ def createGameGrid(startX, startY):
 
 # Taken from Source 1 with major changes
 def floodFillCheck(xPos, yPos):
+    gameGrid[yPos][xPos] = True
+    if mineGrid[yPos][xPos] != '*':
+        if int(mineGrid[yPos][xPos]) == 0:
+            gameGrid[yPos][xPos] = True
+            if yPos < height-1 and xPos > 0 and not gameGrid[yPos+1][xPos-1]:
+                gameGrid[yPos+1][xPos-1] = True
+                floodFillCheck(xPos-1, yPos+1)
+            if yPos < height-1 and not gameGrid[yPos+1][xPos]:
+                gameGrid[yPos+1][xPos] = True
+                floodFillCheck(xPos, yPos+1)
+            if yPos < height-1 and xPos < width-1 and not gameGrid[yPos+1][xPos+1]:
+                gameGrid[yPos+1][xPos+1] = True
+                floodFillCheck(xPos+1, yPos+1)
+            if xPos > 0 and not gameGrid[yPos][xPos-1]:
+                gameGrid[yPos][xPos-1] = True
+                floodFillCheck(xPos-1, yPos)
+            if xPos < width-1 and not gameGrid[yPos][xPos+1]:
+                gameGrid[yPos][xPos+1] = True
+                floodFillCheck(xPos+1, yPos)
+            if yPos > 0 and xPos > 0 and not gameGrid[yPos-1][xPos-1]:
+                gameGrid[yPos-1][xPos-1] = True
+                floodFillCheck(xPos-1, yPos-1)
+            if yPos > 0 and not gameGrid[yPos-1][xPos]:
+                gameGrid[yPos-1][xPos] = True
+                floodFillCheck(xPos, yPos-1)
+            if yPos > 0 and xPos < width-1 and not gameGrid[yPos-1][xPos+1]:
+                gameGrid[yPos-1][xPos+1] = True
+                floodFillCheck(xPos+1, yPos-1)
+
+def parseUserInput(inputMessage):
+    inputMessage = inputMessage.split(" ")
+    xPos = int(inputMessage[0]) - 1
+    yPos = int(inputMessage[1]) - 1
     try:
-        if int(mineGrid[yPos][xPos]) != 0:
-            return
-        gameGrid[yPos][xPos] = True
-        if yPos < height-1 and xPos > 0 and not gameGrid[yPos+1][xPos-1]:
-            gameGrid[yPos+1][xPos-1] = True
-            floodFillCheck(yPos+1, xPos-1)
-        if yPos < height-1 and not gameGrid[yPos+1][xPos]:
-            gameGrid[yPos+1][xPos] = True
-            floodFillCheck(yPos+1, xPos)
-        if yPos < height-1 and xPos < width-1 and not gameGrid[yPos+1][xPos+1]:
-            gameGrid[yPos+1][xPos+1] = True
-            floodFillCheck(yPos+1, xPos+1)
-        if xPos > 0 and not gameGrid[yPos][xPos-1]:
-            gameGrid[yPos][xPos-1] = True
-            floodFillCheck(yPos, xPos-1)
-        if xPos < width-1 and not gameGrid[yPos][xPos+1]:
-            gameGrid[yPos][xPos+1] = True
-            floodFillCheck(yPos, xPos+1)
-        if yPos > 0 and xPos > 0 and not gameGrid[yPos-1][xPos-1]:
-            gameGrid[yPos-1][xPos-1] = True
-            floodFillCheck(yPos-1, xPos-1)
-        if yPos > 0 and not gameGrid[yPos-1][xPos]:
-            gameGrid[yPos-1][xPos] = True
-            floodFillCheck(yPos-1, xPos)
-        if yPos > 0 and xPos < width-1 and not gameGrid[yPos-1][xPos+1]:
-            gameGrid[yPos-1][xPos+1] = True
-            floodFillCheck(yPos-1, xPos+1)
-    except ValueError:
-        return
+        if inputMessage[2] == 'f' or inputMessage[2] == 'F':
+            if gameGrid[yPos][xPos] == False:
+                gameGrid[yPos][xPos] = 'F'
+            elif gameGrid[yPos][xPos] == 'F':
+                gameGrid[yPos][xPos] = False
+            else:
+                print("You can't place flags on revealed squares!")
+                time.sleep(0.5)
+    except IndexError:
+        if gameGrid[yPos][xPos] != 'F':
+            floodFillCheck(xPos, yPos)
+            if mineGrid[yPos][xPos] == '*':
+                print("You died!")
+        else:
+            print("You cannot reveal sqaures with a flag!")
+            time.sleep(0.5)
+    printGrid()
+    parseUserInput(input("Input coords: "))
 
 def printGrid():
+    clear()
     for y in range(0, height):
         for x in range(0, width):
-            if gameGrid[y][x]:
-                print(mineGrid[y][x], end=' ')
+            if gameGrid[y][x] == 'F':
+                print('F', end=' ')
             else:
-                print('-', end=' ')
+                if gameGrid[y][x]:
+                    print(mineGrid[y][x], end=' ')
+                else:
+                    print('-', end=' ')
         print('\n',end='')
 
 createMineGrid(0, 0)
 printGrid()
+parseUserInput(input("Input coords: "))
 
 input("Press ENTER to exit")
 
