@@ -162,6 +162,9 @@ def parseUserInput(inputMessage):
     except ValueError:
         print("Only input intergers for coordinates!")
         time.sleep(1)
+    except IndexError:
+        print("Only input valid coordinates!")
+        time.sleep(1)
     if checkWin():
         printGrid()
         print("You won!")
