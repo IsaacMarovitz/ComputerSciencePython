@@ -42,9 +42,7 @@ def clear():
 
 def createMineGrid(startX, startY):
     for _ in range(0, height):
-        tempWidthGrid = []
-        for x in range(0, width):
-            tempWidthGrid.append('0')
+        tempWidthGrid = [0 for x in range(width)]
         mineGrid.append(tempWidthGrid)
 
     totalMineCount = 0
@@ -239,10 +237,12 @@ while not startCoordsReceived:
         clear()
         print('Welcome to Minesweeper\n')
 
+startTime = time.time()
 createMineGrid(xCoord, yCoord)
 printGrid()
 parseUserInput(input("Input coords: "))
 
+print(f"You played for {round(time.time() - startTime, 2)} seconds!")
 input("Press ENTER to exit")
 
 # On my honour, I have neither given nor received unauthorised aid
