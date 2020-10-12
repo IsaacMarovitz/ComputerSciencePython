@@ -1,9 +1,9 @@
 # Python Homework 02/10/20
-# Sources:
-# 1. http://inventwithpython.com/blog/2011/08/11/recursion-explained-with-the-flood-fill-algorithm-and-zombies-and-cats/
+# Sources: N/A
 
 import sys, random, os, time
 
+# Get starting command line argument and check for errors
 try:
     width = int(sys.argv[1])
     if width < 1 or width > 30:
@@ -31,15 +31,18 @@ except IndexError:
 except ValueError:
     sys.exit("Number of mines can only be an interger!\nProgram exiting.")
 
+# Declaring needed arrays
 mineGrid = []
 gameGrid = []
 
+# Clear the terminal
 def clear():
     if os.name == "nt":
         os.system('cls')
     else:
         os.system("clear")
 
+# Creates the mineGrid, which is the solved version of the grid that the user doesnt see
 def createMineGrid(startX, startY):
     for _ in range(0, height):
         tempWidthGrid = [0 for x in range(width)]
@@ -77,6 +80,7 @@ def createMineGrid(startX, startY):
                 mineGrid[y][x] = surroundingMineCount
     createGameGrid(startX, startY)
 
+# Create the gameGrid which stores hidden tiles with 'False', shown tiles with 'True', and flagged tiles with 'f', default it all to 'False'
 def createGameGrid(startX, startY):
     for _ in range(0, height):
         tempWidthGrid = []
@@ -84,39 +88,40 @@ def createGameGrid(startX, startY):
             tempWidthGrid.append(False)
         gameGrid.append(tempWidthGrid)
     
-    floodFillCheck(startX, startY)
+    recursiveCheck(startX, startY)
 
-# Taken from Source 1 with major changes
-def floodFillCheck(xPos, yPos):
+# Checks all tiles around a given tile and starts the check if it isn't already shown
+def recursiveCheck(xPos, yPos):
     gameGrid[yPos][xPos] = True
     if mineGrid[yPos][xPos] != '*':
         if int(mineGrid[yPos][xPos]) == 0:
             gameGrid[yPos][xPos] = True
             if yPos < height-1 and xPos > 0 and not gameGrid[yPos+1][xPos-1]:
                 gameGrid[yPos+1][xPos-1] = True
-                floodFillCheck(xPos-1, yPos+1)
+                recursiveCheck(xPos-1, yPos+1)
             if yPos < height-1 and not gameGrid[yPos+1][xPos]:
                 gameGrid[yPos+1][xPos] = True
-                floodFillCheck(xPos, yPos+1)
+                recursiveCheck(xPos, yPos+1)
             if yPos < height-1 and xPos < width-1 and not gameGrid[yPos+1][xPos+1]:
                 gameGrid[yPos+1][xPos+1] = True
-                floodFillCheck(xPos+1, yPos+1)
+                recursiveCheck(xPos+1, yPos+1)
             if xPos > 0 and not gameGrid[yPos][xPos-1]:
                 gameGrid[yPos][xPos-1] = True
-                floodFillCheck(xPos-1, yPos)
+                recursiveCheck(xPos-1, yPos)
             if xPos < width-1 and not gameGrid[yPos][xPos+1]:
                 gameGrid[yPos][xPos+1] = True
-                floodFillCheck(xPos+1, yPos)
+                recursiveCheck(xPos+1, yPos)
             if yPos > 0 and xPos > 0 and not gameGrid[yPos-1][xPos-1]:
                 gameGrid[yPos-1][xPos-1] = True
-                floodFillCheck(xPos-1, yPos-1)
+                recursiveCheck(xPos-1, yPos-1)
             if yPos > 0 and not gameGrid[yPos-1][xPos]:
                 gameGrid[yPos-1][xPos] = True
-                floodFillCheck(xPos, yPos-1)
+                recursiveCheck(xPos, yPos-1)
             if yPos > 0 and xPos < width-1 and not gameGrid[yPos-1][xPos+1]:
                 gameGrid[yPos-1][xPos+1] = True
-                floodFillCheck(xPos+1, yPos-1)
+                recursiveCheck(xPos+1, yPos-1)
 
+# This checks to see if the win conditions have been met yet by checking if there are any unrevealed non-mine tiles
 def checkWin():
     totalSqauresLeft = 0
     for x in range(0, width):
@@ -128,6 +133,7 @@ def checkWin():
     else:
         return False
 
+# Parses user input coords for each turn and checks for errors
 def parseUserInput(inputMessage):
     inputMessage = inputMessage.strip().split(" ")
     try:
@@ -147,7 +153,7 @@ def parseUserInput(inputMessage):
                 time.sleep(1)
         except IndexError:
             if gameGrid[yPos][xPos] != 'F':
-                floodFillCheck(xPos, yPos)
+                recursiveCheck(xPos, yPos)
                 if mineGrid[yPos][xPos] == '*':
                     print("You died!")
                     return
@@ -167,6 +173,7 @@ def parseUserInput(inputMessage):
         printGrid()
         parseUserInput(input("Input coords: "))
 
+# Prints the grid with spacing and unicode box-drawing characters for added aesthetics 
 def printGrid():
     clear()
     print('┌',end='')
@@ -180,12 +187,12 @@ def printGrid():
         for x in range (0, width):
             print('│', end='')
             if gameGrid[y][x] == 'F':
-                print(' F ', end='')
+                print(' ⚑ ', end='')
             else:
                 if gameGrid[y][x]:
                     print(f" {mineGrid[y][x]} ", end='')
                 else:
-                    print(' - ', end='')
+                    print(' ◼ ', end='')
             if not (x < width-1):
                 print('│', end='')
         print('\n',end='')
@@ -206,44 +213,69 @@ def printGrid():
                     print('───┘', end='')
         print('\n', end='')
 
-clear()
-print('Welcome to Minesweeper\n')
-startCoordsReceived = False
+# Starts the game, gets the starting coords from the user, checks for errors, keeps track of game time, and asks the user if they want to play again
+def startGame():
+    clear()
+    print('Welcome to Minesweeper\n')
+    startCoordsReceived = False
 
-while not startCoordsReceived:
-    try:
-        inputMessage = input('Where do you want to start? Input coords (x & y): ')
-        inputMessage = inputMessage.strip().split(' ')
-        xCoord = int(inputMessage[0]) - 1
-        yCoord = int(inputMessage[1]) - 1
-        if xCoord < width and yCoord < height:
-            startCoordsReceived = True
-        else:
-            print(f"Width and height must be between 0 and {width} and {height} respectively!")
+    while not startCoordsReceived:
+        try:
+            inputMessage = input('Where do you want to start? Input coords (x & y): ')
+            inputMessage = inputMessage.strip().split(' ')
+            xCoord = int(inputMessage[0]) - 1
+            yCoord = int(inputMessage[1]) - 1
+            if xCoord < width and yCoord < height:
+                startCoordsReceived = True
+            else:
+                print(f"Width and height must be between 0 and {width} and {height} respectively!")
+                startCoordsReceived = False
+                time.sleep(1)
+                clear()
+                print('Welcome to Minesweeper\n')    
+        except IndexError:
+            print("Please input an x AND a y coordinate seperated by a space.")
             startCoordsReceived = False
             time.sleep(1)
             clear()
-            print('Welcome to Minesweeper\n')    
-    except IndexError:
-        print("Please input an x AND a y coordinate seperated by a space.")
-        startCoordsReceived = False
-        time.sleep(1)
-        clear()
-        print('Welcome to Minesweeper\n')
-    except ValueError:
-        print("Please only input whole intergers.")
-        startCoordsReceived = False
-        time.sleep(1)
-        clear()
-        print('Welcome to Minesweeper\n')
+            print('Welcome to Minesweeper\n')
+        except ValueError:
+            print("Please only input whole intergers.")
+            startCoordsReceived = False
+            time.sleep(1)
+            clear()
+            print('Welcome to Minesweeper\n')
 
-startTime = time.time()
-createMineGrid(xCoord, yCoord)
-printGrid()
-parseUserInput(input("Input coords: "))
+    startTime = time.time()
+    createMineGrid(xCoord, yCoord)
+    printGrid()
+    parseUserInput(input("Input coords: "))
 
-print(f"You played for {round(time.time() - startTime, 2)} seconds!")
-input("Press ENTER to exit")
+    print(f"You played for {round(time.time() - startTime, 2)} seconds!")
+    playAgainReceived = False
+
+    while not playAgainReceived:
+        try:
+            inputMessage = input('Do you want to play again? (y/n): ')
+            inputMessage = inputMessage.strip().lower()
+            if inputMessage == 'y' or inputMessage == 'yes':
+                playAgainReceived = True
+                startGame()
+            elif inputMessage == 'n' or inputMessage == 'no':
+                playAgainReceived = True
+                input("Press ENTER to exit")
+            else:
+                print("Please input yes or no")
+                time.sleep(1)
+                clear()
+                playAgainReceived = False
+        except ValueError:
+            print("Please input yes or no")
+            time.sleep(1)
+            clear()
+            playAgainReceived = False
+
+startGame()
 
 # On my honour, I have neither given nor received unauthorised aid
 # Isaac Marovitz

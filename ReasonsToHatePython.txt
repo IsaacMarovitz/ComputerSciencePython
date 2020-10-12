@@ -1,14 +1,14 @@
 1. Uppercase booleans
 2. 'elif' instead of 'else if'
 3. Lack of end of line ';'
-4. Lack of a switch statment
+4. Lack of a switch statement
 5. lowercase_with_lines is the standard notCamelCase
 6. 'and' and 'or' are boolean operators not '&&' and '||'
 7. Lack of '{}' structure
 8. Power operator is '**' not '^'
-9. Python is executed from top to bottom meaning you can't call a funciton if you write it lower in the script
+9. Python is executed from top to bottom meaning you can't call a function if you write it lower in the script
 10. Python is slow
-11. Python doesn't even HAVE the option to implicitly restrcit the type of a variable meaning you have to error check EVERYTHING
+11. Python doesn't even HAVE the option to implicitly restrict the type of a variable meaning you have to error check EVERYTHING
 12. Python 2 and Python 3 use completely different syntax
-13. Python relies entirely on intentation to check if code is a part of a block
-14. Becuase there are no implict types you can't define a return type for functions
+13. Python relies entirely on indentation to check if code is a part of a block
+14. Because there are no implicit types you can't define a return type for functions
