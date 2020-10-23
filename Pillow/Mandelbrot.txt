@@ -1,0 +1,11 @@
+- Escaped after 1:
+(1.5, 1.5)
+(-1.5, 1.5)
+
+- Escaped after 2:
+(1, 0.5)
+(1, 1)
+
+- Escaped after 3 or more or doesn't escape:
+(0, 0)
+(0, 0.5)
