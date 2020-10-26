@@ -1,8 +1,8 @@
 from PIL import Image
 import math, time
 
-xSize = 4000
-ySize = 4000
+xSize = 1000
+ySize = 1000
 max_iterations = 255
 xOffset = 4 / xSize
 yOffset = 4 / ySize

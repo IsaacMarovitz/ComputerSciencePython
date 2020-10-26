@@ -118,11 +118,6 @@ try:
 except json.decoder.JSONDecodeError:
     sys.exit("Error: story.json is missing or corrupted!\nProgram exiting.")
 
-def startBattle():
-    global currentRoomIndex
-    global currentBattleName
-    currentBattleName = storyData['rooms'][currentRoomIndex]['battleText']
-
 def go(inputMessage):
     global currentRoomIndex
     global quick
