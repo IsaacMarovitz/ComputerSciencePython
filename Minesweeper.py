@@ -1,35 +1,9 @@
-# Python Homework 02/10/20
+# Isaac Marovitz - Python Homework 02/10/20
 # Sources: N/A
+# Blah blah blah
+# On my honour, I have neither given nor received unauthorised aid
 
 import sys, random, os, time
-
-# Get starting command line argument and check for errors
-try:
-    width = int(sys.argv[1])
-    if width < 1 or width > 30:
-        sys.exit("Width must be greater than 0 and less than 30!\nProgram exiting.")
-except IndexError:
-    sys.exit("Width not given!\nProgram exiting.")
-except ValueError:
-    sys.exit("Width can only be an interger!\nProgram exiting.")
-
-try:
-    height = int(sys.argv[2])
-    if height < 1 or width > 30:
-        sys.exit("Height must be greater than 0 and less than 30!\nProgram exiting.")
-except IndexError:
-    sys.exit("Height not given!\nProgram exiting.")
-except ValueError:
-    sys.exit("Height can only be an interger!\nProgram exiting.")
-
-try:
-    mineCount = int(sys.argv[3])
-    if mineCount < 1 or mineCount > (width * height):
-        sys.exit("Number of mines must be greater than 0 and less than the number of grid squares!\nProgram exiting.")
-except IndexError:
-    sys.exit("Number of mines not given!\nProgram exiting.")
-except ValueError:
-    sys.exit("Number of mines can only be an interger!\nProgram exiting.")
 
 # Declaring needed arrays
 mineGrid = []
@@ -42,12 +16,37 @@ def clear():
     else:
         os.system("clear")
 
+# Returns all items surrounding an item in a given array
+def checkSurrounding(givenArray, x, y):
+    returnArray = []
+    height = len(givenArray) - 1
+    width = len(givenArray[0]) - 1
+    if y < height and x > 0:
+        returnArray.append((givenArray[y+1][x-1], y+1, x-1))
+    if y < height:
+        returnArray.append((givenArray[y+1][x], y+1, x))
+    if y < height and x < width:
+        returnArray.append((givenArray[y+1][x+1], y+1, x+1))
+    if x > 0:
+        returnArray.append((givenArray[y][x-1], y, x-1))
+    if x < width:
+        returnArray.append((givenArray[y][x+1], y, x+1))
+    if y > 0 and x > 0:
+        returnArray.append((givenArray[y-1][x-1], y-1, x-1))
+    if y > 0:
+        returnArray.append((givenArray[y-1][x], y-1, x))
+    if y > 0 and x < width:
+        returnArray.append((givenArray[y-1][x+1], y-1, x+1))
+    return returnArray
+
 # Creates the mineGrid, which is the solved version of the grid that the user doesnt see
 def createMineGrid(startX, startY):
+    # Create 2D Array if given width and height
     for _ in range(0, height):
         tempWidthGrid = [0 for x in range(width)]
         mineGrid.append(tempWidthGrid)
 
+    # Place mines in the grid until the mine count equals total mine count
     totalMineCount = 0
     while totalMineCount < mineCount:
         xPosition = random.randint(0, width-1)
@@ -57,26 +56,15 @@ def createMineGrid(startX, startY):
                 mineGrid[yPosition][xPosition] = '*'
                 totalMineCount = totalMineCount + 1
 
+    # Sets all the numbers in the grid to the number of mines surrounding that point
     for y in range(0, height):
         for x in range(0, width):
             if mineGrid[y][x] != '*':
                 surroundingMineCount = 0
-                if y < height-1 and x > 0 and mineGrid[y+1][x-1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if y < height-1 and mineGrid[y+1][x] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if y < height-1 and x < width-1 and mineGrid[y+1][x+1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if x > 0 and mineGrid[y][x-1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if x < width-1 and mineGrid[y][x+1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if y > 0 and x > 0 and mineGrid[y-1][x-1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if y > 0 and mineGrid[y-1][x] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
-                if y > 0 and x < width-1 and mineGrid[y-1][x+1] == '*':
-                    surroundingMineCount = surroundingMineCount + 1
+                checkArray = checkSurrounding(mineGrid, x, y)
+                for value in checkArray:
+                    if value[0] == '*':
+                        surroundingMineCount += 1
                 mineGrid[y][x] = surroundingMineCount
     createGameGrid(startX, startY)
 
@@ -96,30 +84,11 @@ def recursiveCheck(xPos, yPos):
     if mineGrid[yPos][xPos] != '*':
         if int(mineGrid[yPos][xPos]) == 0:
             gameGrid[yPos][xPos] = True
-            if yPos < height-1 and xPos > 0 and not gameGrid[yPos+1][xPos-1]:
-                gameGrid[yPos+1][xPos-1] = True
-                recursiveCheck(xPos-1, yPos+1)
-            if yPos < height-1 and not gameGrid[yPos+1][xPos]:
-                gameGrid[yPos+1][xPos] = True
-                recursiveCheck(xPos, yPos+1)
-            if yPos < height-1 and xPos < width-1 and not gameGrid[yPos+1][xPos+1]:
-                gameGrid[yPos+1][xPos+1] = True
-                recursiveCheck(xPos+1, yPos+1)
-            if xPos > 0 and not gameGrid[yPos][xPos-1]:
-                gameGrid[yPos][xPos-1] = True
-                recursiveCheck(xPos-1, yPos)
-            if xPos < width-1 and not gameGrid[yPos][xPos+1]:
-                gameGrid[yPos][xPos+1] = True
-                recursiveCheck(xPos+1, yPos)
-            if yPos > 0 and xPos > 0 and not gameGrid[yPos-1][xPos-1]:
-                gameGrid[yPos-1][xPos-1] = True
-                recursiveCheck(xPos-1, yPos-1)
-            if yPos > 0 and not gameGrid[yPos-1][xPos]:
-                gameGrid[yPos-1][xPos] = True
-                recursiveCheck(xPos, yPos-1)
-            if yPos > 0 and xPos < width-1 and not gameGrid[yPos-1][xPos+1]:
-                gameGrid[yPos-1][xPos+1] = True
-                recursiveCheck(xPos+1, yPos-1)
+            checkArray = checkSurrounding(gameGrid, xPos, yPos)
+            for value in checkArray:
+                if not value[0]:
+                    gameGrid[value[1]][value[2]] = True
+                    recursiveCheck(value[1], value[2])
 
 # This checks to see if the win conditions have been met yet by checking if there are any unrevealed non-mine tiles
 def checkWin():
@@ -135,10 +104,13 @@ def checkWin():
 
 # Parses user input coords for each turn and checks for errors
 def parseUserInput(inputMessage):
+    # Gets input message and splits it into an array 
     inputMessage = inputMessage.strip().split(" ")
     try:
+        # Gets input coords from input message array
         xPos = int(inputMessage[0]) - 1
         yPos = int(inputMessage[1]) - 1
+        # If an 'f' is included, toggle the flag on the given square
         try:
             if inputMessage[2] == 'f' or inputMessage[2] == 'F':
                 if gameGrid[yPos][xPos] == False:
@@ -151,6 +123,7 @@ def parseUserInput(inputMessage):
             else:
                 print("Type 'f' to place a flag at the given coordinates!")
                 time.sleep(1)
+        # If no flag is included, check if the given square is a mine and either reveal it or end the game
         except IndexError:
             if gameGrid[yPos][xPos] != 'F':
                 recursiveCheck(xPos, yPos)
@@ -160,6 +133,7 @@ def parseUserInput(inputMessage):
             else:
                 print("You cannot reveal sqaures with a flag!")
                 time.sleep(1)
+    # Error checking
     except ValueError:
         print("Only input intergers for coordinates!")
         time.sleep(1)
@@ -189,7 +163,7 @@ def printGrid():
             if gameGrid[y][x] == 'F':
                 print(' ⚑ ', end='')
             else:
-                if gameGrid[y][x]:
+                if gameGrid[y][x] and mineGrid[y][x] != '*':
                     print(f" {mineGrid[y][x]} ", end='')
                 else:
                     print(' ◼ ', end='')
@@ -215,10 +189,14 @@ def printGrid():
 
 # Starts the game, gets the starting coords from the user, checks for errors, keeps track of game time, and asks the user if they want to play again
 def startGame():
+    global mineGrid, gameGrid
     clear()
     print('Welcome to Minesweeper\n')
     startCoordsReceived = False
+    mineGrid = []   
+    gameGrid = []
 
+    # Receive starting coords and check if they're valid
     while not startCoordsReceived:
         try:
             inputMessage = input('Where do you want to start? Input coords (x & y): ')
@@ -246,14 +224,17 @@ def startGame():
             clear()
             print('Welcome to Minesweeper\n')
 
+    # Record start time and create mine grid
     startTime = time.time()
     createMineGrid(xCoord, yCoord)
     printGrid()
     parseUserInput(input("Input coords: "))
 
+    # When the game finishes, display final time
     print(f"You played for {round(time.time() - startTime, 2)} seconds!")
     playAgainReceived = False
 
+    # Ask the user if they want to play again
     while not playAgainReceived:
         try:
             inputMessage = input('Do you want to play again? (y/n): ')
@@ -275,7 +256,32 @@ def startGame():
             clear()
             playAgainReceived = False
 
-startGame()
+# Get starting command line argument and check for errors
+try:
+    width = int(sys.argv[1])
+    if width < 1 or width > 30:
+        sys.exit("Width must be greater than 0 and less than 30!\nProgram exiting.")
+except IndexError:
+    sys.exit("Width not given!\nProgram exiting.")
+except ValueError:
+    sys.exit("Width can only be an interger!\nProgram exiting.")
 
-# On my honour, I have neither given nor received unauthorised aid
-# Isaac Marovitz
+try:
+    height = int(sys.argv[2])
+    if height < 1 or width > 30:
+        sys.exit("Height must be greater than 0 and less than 30!\nProgram exiting.")
+except IndexError:
+    sys.exit("Height not given!\nProgram exiting.")
+except ValueError:
+    sys.exit("Height can only be an interger!\nProgram exiting.")
+
+try:
+    mineCount = int(sys.argv[3])
+    if mineCount < 1 or mineCount > (width * height):
+        sys.exit("Number of mines must be greater than 0 and less than the number of grid squares!\nProgram exiting.")
+except IndexError:
+    sys.exit("Number of mines not given!\nProgram exiting.")
+except ValueError:
+    sys.exit("Number of mines can only be an interger!\nProgram exiting.")
+
+startGame()
