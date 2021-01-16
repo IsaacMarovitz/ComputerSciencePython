@@ -6,6 +6,9 @@ from tqdm import tqdm
 
 diamond_chance = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 random_weights = [27/126, 6/126, 11/126, 11/126, 24/126, 10/126, 20/126, 3/126, 12/126, 2/126]
+x_ticks = [11.8e12, 12e12, 12.2e12, 12.4e12, 12.6e12, 12.8e12, 13e12, 13.2e12, 13.4e12, 13.6e12, 13.8e12, 14e12]
+ylim = [0, 300]
+xlim = [11.8e12, 14e12]
 world_size = 30000000
 chunk_size = 16
 number_of_chunks = (world_size**2) / (chunk_size**2)
@@ -32,9 +35,25 @@ def run_sim(index):
 def trillions(x, pos):
     return '%1.1fT' % (x * 1e-12)
 
-if __name__ == "__main__":
+def show_graph():
     formatter = FuncFormatter(trillions)
+    plt.style.use('./seaborn-border.mplstyle')
+    fig, ax = plt.subplots()
+    fig.canvas.set_window_title("Diamond Vein Graph")
+    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95)
+    ax.set_ylim(ylim)
+    ax.set_xlim(xlim)
+    ax.tick_params(length=6)
+    ax.plot(sorted_dict.keys(), sorted_dict.values())
+    ax.set_ylabel('No. of Worlds with x Diamond Ores')
+    ax.set_xlabel('No. of Diamond Ores in World (in Trillions)')
+    ax.xaxis.set_major_formatter(formatter)
+    ax.xaxis.set_ticks(x_ticks)
+    ax.set_title('Total Number of Diamond Ores per Minecraft World')
+    ax.margins(x=0, y=0)
+    plt.show()
 
+if __name__ == "__main__":
     with multiprocessing.Pool(4) as pool:
         # Source: https://stackoverflow.com/questions/41920124/multiprocessing-use-tqdm-to-display-a-progress-bar
         diamond_count = list(tqdm(pool.imap(run_sim, range(number_of_simulations)), total=number_of_simulations))
@@ -43,15 +62,6 @@ if __name__ == "__main__":
     diamond_count_occurence = Counter(diamond_count)
     # Helped for this line by Max Fan
     sorted_dict = {k:diamond_count_occurence[k] for k in sorted(diamond_count_occurence.keys())}
-    print(sorted_dict)
+    show_graph()
 
-    plt.style.use('seaborn')
-    fig, ax = plt.subplots()
-    ax.get_xl
-    ax.plot(sorted_dict.keys(), sorted_dict.values())
-    ax.set_ylabel('No. of Worlds with x Diamond Ores')
-    ax.set_xlabel('No. of Diamond Ores in World (in Trillions)')
-    ax.xaxis.set_major_formatter(formatter)
-    ax.set_title('Total Number of Diamond Ores per Minecraft World')
-    ax.margins(x=0, y=0)
-    plt.show()
+
